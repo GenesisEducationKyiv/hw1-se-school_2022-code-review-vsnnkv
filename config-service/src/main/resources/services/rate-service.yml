@@ -1,0 +1,4 @@
+server:
+  servlet:
+    context-path: /rate
+  port: 8081
