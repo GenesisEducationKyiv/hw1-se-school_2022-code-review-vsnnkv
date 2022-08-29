@@ -15,15 +15,6 @@ services:
     depends_on:
       - config-service
 
-  gateway:
-    container_name: gateway
-    restart: always
-    build: gateway
-    ports:
-      - 8989:8989
-    depends_on:
-      - config-service
-      - registry
   rate-service:
     container_name: rate-service
     restart: on-failure
@@ -65,4 +56,3 @@ services:
     depends_on:
       - config-service
       - registry
-#    network_mode: "host"

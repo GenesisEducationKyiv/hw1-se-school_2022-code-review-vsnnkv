@@ -23,7 +23,7 @@ public class SubscriptionService {
     private final RateServiceClient rateServiceClient;
 
 
-    File emails;
+   private File emails;
 
     @Autowired
     public SubscriptionService(RabbitTemplate rabbitTemplate, RateServiceClient rateServiceClient) {

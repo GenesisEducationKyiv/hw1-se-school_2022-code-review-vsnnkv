@@ -20,8 +20,8 @@ public class MailConfig {
     @Bean
     public JavaMailSender javaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.ukr.net");
-        mailSender.setPort(465);
+        mailSender.setHost("smtp.ukr.net"); //Вказати хост
+        mailSender.setPort(465); //Вказати порт
 
         mailSender.setUsername(environment.getProperty("mail.username"));
         mailSender.setPassword(environment.getProperty("mail.password"));

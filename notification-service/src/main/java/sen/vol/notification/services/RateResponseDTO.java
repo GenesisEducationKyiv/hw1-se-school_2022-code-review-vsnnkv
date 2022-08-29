@@ -1,10 +1,10 @@
 package sen.vol.notification.services;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class RateResponseDTO {
 
     private Long price;

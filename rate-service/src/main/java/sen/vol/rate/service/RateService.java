@@ -1,5 +1,7 @@
 package sen.vol.rate.service;
 
+import com.netflix.ribbon.proxy.annotation.Http;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -8,17 +10,18 @@ import org.springframework.web.client.RestTemplate;
 public class RateService {
 
     private final RestTemplate restTemplate;
+    private final String coinGeckoSimpleApiUrl;
 
-
-    public RateService(RestTemplateBuilder restTemplateBuilder) {
+    public RateService(RestTemplateBuilder restTemplateBuilder,
+                       @Value("${external.api.coingecko.simple.price}") String coinGeckoSimpleApiUrl) {
         this.restTemplate = restTemplateBuilder.build();
+        this.coinGeckoSimpleApiUrl = coinGeckoSimpleApiUrl;
     }
 
     public HTTPResponseDTO<String> getRateBtsToUah(){
 
         try {
-            String url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=uah";
-            RateResponseDTO responseData = this.restTemplate.getForObject(url, RateResponseDTO.class);
+            RateResponseDTO responseData = this.restTemplate.getForObject(coinGeckoSimpleApiUrl, RateResponseDTO.class);
             if (responseData == null) {
                 return new HTTPResponseDTO<>("Помилка сервера", 500);
             }
