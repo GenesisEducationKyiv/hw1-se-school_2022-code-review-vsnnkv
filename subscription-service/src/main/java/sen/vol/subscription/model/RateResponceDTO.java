@@ -1,4 +1,4 @@
-package sen.vol.subscription.service;
+package sen.vol.subscription.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RateResponceDTO {
 
-    private String price;
+    private Integer price;
 
     private String mail;
 }

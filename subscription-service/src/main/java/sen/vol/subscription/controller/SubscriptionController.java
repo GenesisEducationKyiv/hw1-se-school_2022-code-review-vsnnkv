@@ -3,8 +3,7 @@ package sen.vol.subscription.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sen.vol.subscription.controller.dto.EmailRequestDTO;
-import sen.vol.subscription.service.HTTPResponseDTO;
+import sen.vol.subscription.model.EmailRequestDTO;
 import sen.vol.subscription.service.SubscriptionService;
 
 import java.io.IOException;
@@ -19,17 +18,29 @@ public class SubscriptionController {
         this.subscriptionService = subscriptionService;
     }
 
-    @PostMapping("/api/subscribe")
+//    @PostMapping("/api/subscribe")
+//    public ResponseEntity<String> subscribeEmail(@RequestBody EmailRequestDTO emailRequestDTO){
+//
+//        HTTPResponseDTO<String> httpResponseDTO = subscriptionService.saveEmail(emailRequestDTO.getEmail());
+//        return ResponseEntity.status(httpResponseDTO.getCode()).body(httpResponseDTO.getMessage());
+//    }
+        @PostMapping("/api/subscribe")
     public ResponseEntity<String> subscribeEmail(@RequestBody EmailRequestDTO emailRequestDTO){
 
-        HTTPResponseDTO<String> httpResponseDTO = subscriptionService.saveEmail(emailRequestDTO.getEmail());
-        return ResponseEntity.status(httpResponseDTO.getCode()).body(httpResponseDTO.getMessage());
+        return subscriptionService.saveEmail(emailRequestDTO.getEmail());
     }
 
-    @GetMapping("/api/sendEmails")
+
+//    @GetMapping("/api/sendEmails")
+//    public ResponseEntity<String> sendEmails() throws IOException {
+//        HTTPResponseDTO<String> response = subscriptionService.createResponse();
+//        return ResponseEntity.status(response.getCode()).body(response.getMessage());
+//    }
+   @GetMapping("/api/sendEmails")
     public ResponseEntity<String> sendEmails() throws IOException {
-        HTTPResponseDTO<String> response = subscriptionService.createResponse();
-        return ResponseEntity.status(response.getCode()).body(response.getMessage());
+//        HTTPResponseDTO<String> response = subscriptionService.createResponse();
+//        return ResponseEntity.status(response.getCode()).body(response.getMessage());
+        return subscriptionService.createResponse();
     }
 
 }

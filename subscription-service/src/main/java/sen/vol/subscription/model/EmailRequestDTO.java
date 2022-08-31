@@ -1,4 +1,4 @@
-package sen.vol.subscription.controller.dto;
+package sen.vol.subscription.model;
 
 import lombok.Getter;
 

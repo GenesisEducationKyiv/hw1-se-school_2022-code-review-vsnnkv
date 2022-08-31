@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(name = "rate-service")
 public interface RateServiceClient {
 
-//    @RequestMapping(value = "/api/rate", method = RequestMethod.GET)
     @GetMapping(value = "/api/rate")
-    String getRateBtsToUah();
+    Integer getRateBtsToUah();
 }

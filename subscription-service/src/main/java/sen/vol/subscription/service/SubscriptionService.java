@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import sen.vol.subscription.model.RateResponceDTO;
 import sen.vol.subscription.rest.RateServiceClient;
 
 import java.io.*;
@@ -32,16 +34,16 @@ public class SubscriptionService {
         checkEmailsFile();
     }
 
-    public HTTPResponseDTO<String> saveEmail(String email) {
-        try {
+    public ResponseEntity<String> saveEmail(String email){
+        try{
             if (lookIfEmailInTheList(email)) {
-                return new HTTPResponseDTO<>("E-mail  вже є в базі данних", 409);
+                return ResponseEntity.status(409).body("E-mail  вже є в базі данних");
             }
             saveEmailToFile(email);
-            return new HTTPResponseDTO<>("E-mail додано");
-        } catch (Exception exception) {
+            return ResponseEntity.ok("E-mail додано");
+        } catch (Exception exception){
             exception.printStackTrace();
-            return new HTTPResponseDTO<>("Помилка сервера", 500);
+            return ResponseEntity.status(500).body("Помилка сервера");
         }
     }
 
@@ -91,11 +93,11 @@ public class SubscriptionService {
         return results;
     }
 
-    public HTTPResponseDTO<String> createResponse() throws IOException {
+    public ResponseEntity<String> createResponse() throws IOException {
         try {
             List<String> emailsList = getEmails();
 
-            String response = rateServiceClient.getRateBtsToUah();
+            Integer response = rateServiceClient.getRateBtsToUah();
 
             for (String email : emailsList) {
                 RateResponceDTO rateResponseDTO = new RateResponceDTO(response, email);
@@ -109,10 +111,10 @@ public class SubscriptionService {
                 }
             }
 
-            return new HTTPResponseDTO<>("E-mailʼи відправлено");
+            return ResponseEntity.ok("E-mailʼи відправлено");
         } catch (Exception exception){
             exception.printStackTrace();
-            return new HTTPResponseDTO<>("Помилка сервера", 500);
+            return ResponseEntity.status(500).body("Помилка сервера");
         }
     }
 

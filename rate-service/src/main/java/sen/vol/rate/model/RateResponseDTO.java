@@ -1,4 +1,4 @@
-package sen.vol.rate.service;
+package sen.vol.rate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,10 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BitcoinResponseDTO implements Serializable {
+public class RateResponseDTO implements Serializable {
 
-    private Long uah;
+    private BitcoinResponseDTO bitcoin;
 
 }
+
+
