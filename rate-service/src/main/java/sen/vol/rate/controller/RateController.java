@@ -14,11 +14,6 @@ public class RateController {
         this.rateService = rateService;
     }
 
-//    @GetMapping("/api/rate")
-//    public ResponseEntity<String> getRate(){
-//        HTTPResponseDTO<String> rateResponse = rateService.getRateBtsToUah();
-//        return ResponseEntity.status(rateResponse.getCode()).body(rateResponse.getMessage());
-//    }
 
     @GetMapping("/api/rate")
     public ResponseEntity<Integer> getRate(){

@@ -12,7 +12,7 @@ import sen.vol.rate.model.RateResponseDTO;
 public class RateService {
 
     private final RestTemplate restTemplate;
-    private String coinGeckoSimpleApiUrl;
+    private final String coinGeckoSimpleApiUrl;
 
     public RateService(RestTemplateBuilder restTemplateBuilder,
                        @Value("${external.api.coingecko.simple.price}") String coinGeckoSimpleApiUrl){
