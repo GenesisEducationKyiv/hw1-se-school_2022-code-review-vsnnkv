@@ -1,0 +1,8 @@
+rootProject.name = 'btcApplication'
+include 'rate-service'
+include 'subscription-service'
+include 'config-service'
+include 'gateway'
+include 'registry'
+include 'notification-service'
+
