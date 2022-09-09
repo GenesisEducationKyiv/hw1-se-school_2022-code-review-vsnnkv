@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 @Service
-public class SubscriptionService {
+public class SubscriptionService implements SubscriptionEmailService {
 
     private static final String TOPIC_EXCHANGE_RATE = "js.rate.notify.exchange";
 
@@ -81,7 +81,7 @@ public class SubscriptionService {
         return false;
     }
 
-    public List<String> getEmails() throws IOException {
+    private List<String> getEmails() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(emails));
 
         List<String> results = new ArrayList<>();
