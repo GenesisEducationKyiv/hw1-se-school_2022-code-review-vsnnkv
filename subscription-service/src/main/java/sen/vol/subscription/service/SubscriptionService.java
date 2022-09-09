@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import sen.vol.subscription.model.RateResponceDTO;
+import sen.vol.subscription.model.RateResponseDTO;
 import sen.vol.subscription.rest.RateServiceClient;
 
 import java.io.*;
@@ -100,7 +100,7 @@ public class SubscriptionService implements SubscriptionEmailService {
             Integer response = rateServiceClient.getRateBtsToUah();
 
             for (String email : emailsList) {
-                RateResponceDTO rateResponseDTO = new RateResponceDTO(response, email);
+                RateResponseDTO rateResponseDTO = new RateResponseDTO(response, email);
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {

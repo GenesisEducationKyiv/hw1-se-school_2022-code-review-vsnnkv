@@ -12,13 +12,10 @@ import java.io.IOException;
 @RestController
 public class SubscriptionController {
 
-        @Autowired
-    private final SubscriptionService subscriptionService;
+    @Autowired
     private final SubscriptionEmailService subscriptionEmailService;
 
-    public SubscriptionController(SubscriptionService subscriptionService,
-                                  SubscriptionEmailService subscriptionEmailService) {
-        this.subscriptionService = subscriptionService;
+    public SubscriptionController(SubscriptionEmailService subscriptionEmailService) {
         this.subscriptionEmailService = subscriptionEmailService;
     }
 
@@ -26,12 +23,11 @@ public class SubscriptionController {
     public ResponseEntity<String> subscribeEmail(@RequestBody EmailRequestDTO emailRequestDTO) {
 
         return subscriptionEmailService.saveEmail(emailRequestDTO.getEmail());
-//        return subscriptionService.saveEmail(emailRequestDTO.getEmail());
     }
 
     @GetMapping("/api/sendEmails")
     public ResponseEntity<String> sendEmails() throws IOException {
-        return subscriptionService.createResponse();
+        return subscriptionEmailService.createResponse();
     }
 
 }
