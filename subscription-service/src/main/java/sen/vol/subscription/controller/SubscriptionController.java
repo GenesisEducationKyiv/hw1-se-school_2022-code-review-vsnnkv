@@ -18,28 +18,14 @@ public class SubscriptionController {
         this.subscriptionService = subscriptionService;
     }
 
-//    @PostMapping("/api/subscribe")
-//    public ResponseEntity<String> subscribeEmail(@RequestBody EmailRequestDTO emailRequestDTO){
-//
-//        HTTPResponseDTO<String> httpResponseDTO = subscriptionService.saveEmail(emailRequestDTO.getEmail());
-//        return ResponseEntity.status(httpResponseDTO.getCode()).body(httpResponseDTO.getMessage());
-//    }
         @PostMapping("/api/subscribe")
     public ResponseEntity<String> subscribeEmail(@RequestBody EmailRequestDTO emailRequestDTO){
 
         return subscriptionService.saveEmail(emailRequestDTO.getEmail());
     }
 
-
-//    @GetMapping("/api/sendEmails")
-//    public ResponseEntity<String> sendEmails() throws IOException {
-//        HTTPResponseDTO<String> response = subscriptionService.createResponse();
-//        return ResponseEntity.status(response.getCode()).body(response.getMessage());
-//    }
    @GetMapping("/api/sendEmails")
     public ResponseEntity<String> sendEmails() throws IOException {
-//        HTTPResponseDTO<String> response = subscriptionService.createResponse();
-//        return ResponseEntity.status(response.getCode()).body(response.getMessage());
         return subscriptionService.createResponse();
     }
 
