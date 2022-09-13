@@ -4,30 +4,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sen.vol.subscription.model.EmailRequestDTO;
-import sen.vol.subscription.service.SubscriptionEmailService;
-import sen.vol.subscription.service.SubscriptionService;
+import sen.vol.subscription.service.SubscriptionServiceInterface;
 
 import java.io.IOException;
 
 @RestController
 public class SubscriptionController {
 
-    @Autowired
-    private final SubscriptionEmailService subscriptionEmailService;
+    private final SubscriptionServiceInterface subscriptionServiceInterface;
 
-    public SubscriptionController(SubscriptionEmailService subscriptionEmailService) {
-        this.subscriptionEmailService = subscriptionEmailService;
+    public SubscriptionController(SubscriptionServiceInterface subscriptionServiceInterface) {
+        this.subscriptionServiceInterface = subscriptionServiceInterface;
     }
 
     @PostMapping("/api/subscribe")
     public ResponseEntity<String> subscribeEmail(@RequestBody EmailRequestDTO emailRequestDTO) {
 
-        return subscriptionEmailService.saveEmail(emailRequestDTO.getEmail());
+        return subscriptionServiceInterface.saveEmail(emailRequestDTO.getEmail());
     }
 
     @GetMapping("/api/sendEmails")
     public ResponseEntity<String> sendEmails() throws IOException {
-        return subscriptionEmailService.createResponse();
+        return subscriptionServiceInterface.createResponse();
     }
 
 }

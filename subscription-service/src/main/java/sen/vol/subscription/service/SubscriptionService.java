@@ -10,12 +10,10 @@ import sen.vol.subscription.model.RateResponseDTO;
 import sen.vol.subscription.rest.RateServiceClient;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 @Service
-public class SubscriptionService implements SubscriptionEmailService {
+public class SubscriptionService implements SubscriptionServiceInterface {
 
     private static final String TOPIC_EXCHANGE_RATE = "js.rate.notify.exchange";
 
@@ -24,22 +22,24 @@ public class SubscriptionService implements SubscriptionEmailService {
 
     private final RateServiceClient rateServiceClient;
 
+    private final FileServiceInterface fileServiceInterface;
 
-   private File emails;
 
     @Autowired
-    public SubscriptionService(RabbitTemplate rabbitTemplate, RateServiceClient rateServiceClient) {
+    public SubscriptionService(RabbitTemplate rabbitTemplate, RateServiceClient rateServiceClient,
+                               FileServiceInterface fileServiceInterface) {
         this.rabbitTemplate = rabbitTemplate;
         this.rateServiceClient = rateServiceClient;
-        checkEmailsFile();
+        this.fileServiceInterface = fileServiceInterface;
     }
 
     public ResponseEntity<String> saveEmail(String email){
+        fileServiceInterface.checkEmailsFile();
         try{
-            if (lookIfEmailInTheList(email)) {
+            if (fileServiceInterface.lookIfEmailInTheList(email)) {
                 return ResponseEntity.status(409).body("E-mail  вже є в базі данних");
             }
-            saveEmailToFile(email);
+            fileServiceInterface.saveEmailToFile(email);
             return ResponseEntity.ok("E-mail додано");
         } catch (Exception exception){
             exception.printStackTrace();
@@ -47,55 +47,9 @@ public class SubscriptionService implements SubscriptionEmailService {
         }
     }
 
-    private void saveEmailToFile(String email) throws IOException {
-        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(emails, true)));
-
-        writer.println(email);
-        writer.flush();
-        writer.close();
-
-    }
-
-    private void checkEmailsFile(){
-        emails = new File("emails.txt");
-        try {
-            if (!emails.exists()) {
-                emails.createNewFile();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Boolean lookIfEmailInTheList(String email) throws FileNotFoundException {
-        Scanner scanner = new Scanner(emails);
-
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (line.equals(email)) {
-                scanner.close();
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private List<String> getEmails() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(emails));
-
-        List<String> results = new ArrayList<>();
-        String line = reader.readLine();
-        while (line != null) {
-            results.add(line);
-            line = reader.readLine();
-        }
-        return results;
-    }
-
     public ResponseEntity<String> createResponse() throws IOException {
         try {
-            List<String> emailsList = getEmails();
+            List<String> emailsList = fileServiceInterface.getEmails();
 
             Integer response = rateServiceClient.getRateBtsToUah();
 

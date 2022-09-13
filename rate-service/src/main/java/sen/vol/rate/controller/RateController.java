@@ -8,8 +8,6 @@ import sen.vol.rate.service.RateServiceInterface;
 @RestController
 public class RateController {
 
-//    private final RateService rateService;
-
     private final RateServiceInterface rateServiceInterface;
 
     public RateController(RateServiceInterface rateServiceInterface) {

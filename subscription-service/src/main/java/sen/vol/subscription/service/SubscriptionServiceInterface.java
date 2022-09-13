@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 
-public interface SubscriptionEmailService {
+public interface SubscriptionServiceInterface {
 
     ResponseEntity<String> saveEmail(String email);
 
