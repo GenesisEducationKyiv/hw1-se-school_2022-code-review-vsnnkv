@@ -10,7 +10,7 @@ import (
 type RateService struct {
 }
 
-func (i *RateService) GetRate() (int64, error) {
+func (*RateService) GetRate() (int64, error) {
 	cfg := config.Get()
 
 	resp, err := http.Get(cfg.CoinGekoURL)

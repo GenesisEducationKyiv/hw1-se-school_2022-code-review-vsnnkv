@@ -6,6 +6,7 @@ func CreateRoute() {
 	router := gin.Default()
 
 	router.GET("/api/rate", getRate)
+	router.POST("/api/subscribe", subscribe)
 
 	router.Run()
 }

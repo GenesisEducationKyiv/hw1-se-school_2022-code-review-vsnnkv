@@ -8,6 +8,6 @@ type RateController struct {
 	service RateService
 }
 
-func New(s RateService) *RateController {
+func NewRateController(s RateService) *RateController {
 	return &RateController{service: s}
 }
