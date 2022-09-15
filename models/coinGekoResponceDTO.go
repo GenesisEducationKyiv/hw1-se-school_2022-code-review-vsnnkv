@@ -1,9 +1,9 @@
 package models
 
-type CoinGekoResponceDTO struct {
-	Bitkoin bitcoinResponceDTO `json:"bitcoin"`
+type CoinGekoResponseDTO struct {
+	Bitkoin bitcoinResponseDTO `json:"bitcoin"`
 }
 
-type bitcoinResponceDTO struct {
+type bitcoinResponseDTO struct {
 	Uah int64 `json:"uah"`
 }

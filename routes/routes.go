@@ -5,8 +5,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vsnnkv/btcApplicationGo/controllers"
 	"github.com/vsnnkv/btcApplicationGo/models"
+	"github.com/vsnnkv/btcApplicationGo/repository"
 	"github.com/vsnnkv/btcApplicationGo/services"
 )
+
+//
+//type routes struct {
+//	rateController *controllers.RateController
+//	subscriptionController *controllers.SubscriptionController
+//}
+//
+//func Newroutes(r *controllers.RateController, s *controllers.SubscriptionController) *routes{
+//	return &routes{
+//		rateController: r,
+//		subscriptionController: s,
+//	}
+//}
 
 func getRate(c *gin.Context) {
 
@@ -15,8 +29,10 @@ func getRate(c *gin.Context) {
 }
 
 func subscribe(c *gin.Context) {
-	emailsFile := services.FileService{}
-	subscriptionController := controllers.NewSubscriptionController(services.NewSubscriptionService(emailsFile))
+	emailsFile := repository.EmailFile{}
+	fileService := services.NewFileService(&emailsFile)
+	subscriptionService := services.NewSubscriptionService(*fileService)
+	subscriptionController := controllers.NewSubscriptionController(subscriptionService)
 
 	var email models.Email
 	if err := c.BindJSON(&email); err != nil {

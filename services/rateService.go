@@ -19,7 +19,7 @@ func (*RateService) GetRate() (int64, error) {
 		return 0, err
 	}
 
-	var cryptoRate models.CoinGekoResponceDTO
+	var cryptoRate models.CoinGekoResponseDTO
 	if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
 		return 0, err
 	}

@@ -1,7 +1,7 @@
 package services
 
 type FileRepository interface {
-	SaveEmailToFile(email string) error
+	SaveEmailToFile(email string) int
 	//GetEmails() []string
 }
 
@@ -9,6 +9,6 @@ type FileService struct {
 	repository FileRepository
 }
 
-func NewFileRepository(r FileRepository) *FileService {
+func NewFileService(r FileRepository) *FileService {
 	return &FileService{repository: r}
 }
