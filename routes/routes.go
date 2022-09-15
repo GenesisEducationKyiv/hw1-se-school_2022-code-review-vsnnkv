@@ -9,19 +9,6 @@ import (
 	"github.com/vsnnkv/btcApplicationGo/services"
 )
 
-//
-//type routes struct {
-//	rateController *controllers.RateController
-//	subscriptionController *controllers.SubscriptionController
-//}
-//
-//func Newroutes(r *controllers.RateController, s *controllers.SubscriptionController) *routes{
-//	return &routes{
-//		rateController: r,
-//		subscriptionController: s,
-//	}
-//}
-
 func getRate(c *gin.Context) {
 
 	rateController := controllers.NewRateController(&services.RateService{})
