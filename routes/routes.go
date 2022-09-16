@@ -1,40 +1,30 @@
 package routes
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/vsnnkv/btcApplicationGo/controllers"
-	"github.com/vsnnkv/btcApplicationGo/models"
-	"github.com/vsnnkv/btcApplicationGo/repository"
-	"github.com/vsnnkv/btcApplicationGo/services"
 )
 
-func getRate(c *gin.Context) {
-
-	rateController := controllers.NewRateController(&services.RateService{})
-	rateController.Get(c)
+type Handler struct {
+	rateController         *controllers.RateController
+	subscriptionController *controllers.SubscriptionController
+	notificationController *controllers.NotificationController
 }
 
-func subscribe(c *gin.Context) {
-	emailsFile := repository.EmailFile{}
-	fileService := services.NewFileService(&emailsFile)
-	subscriptionService := services.NewSubscriptionService(*fileService)
-	subscriptionController := controllers.NewSubscriptionController(subscriptionService)
-
-	var email models.Email
-	if err := c.BindJSON(&email); err != nil {
-		fmt.Printf("failed  %s\n", err.Error())
-		return
+func New(r *controllers.RateController, s *controllers.SubscriptionController, n *controllers.NotificationController) *Handler {
+	return &Handler{
+		rateController:         r,
+		subscriptionController: s,
+		notificationController: n,
 	}
-	subscriptionController.SaveEmail(email.Email, c)
-
 }
 
-func sendEmails(c *gin.Context) {
-	emailsFile := repository.EmailFile{}
-	fileService := services.NewFileService(&emailsFile)
-	notificationService := services.NewNotificationService(services.RateService{}, *fileService)
-	notificationController := controllers.NewNotificationController(notificationService)
+func (h *Handler) CreateRoute() {
+	router := gin.Default()
 
-	notificationController.SendEmails(c)
+	router.GET("/api/rate", h.rateController.Get)
+	router.POST("/api/subscribe", h.subscriptionController.SaveEmail)
+	router.GET("/api/sendEmails", h.notificationController.SendEmails)
+
+	router.Run()
 }

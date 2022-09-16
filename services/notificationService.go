@@ -43,25 +43,9 @@ func (n *NotificationService) SendEmails() (int, string) {
 
 	d := gomail.NewDialer(host, port, address, password)
 
-	// Send the email to Bob, Cora and Dan.
 	if err := d.DialAndSend(m); err != nil {
 		panic(err)
 		return 500, "Помилка відправки emailʼів"
 	}
 	return 200, "email відправлено"
-
-	//
-	//msg := []byte("From: Bitcoin rate helper\r\n" +
-	//	"Subject: BTCUAH Rate\r\n\r\n" +
-	//	strconv.FormatInt(rate, 10) +
-	//	"\r\n")
-	//auth := smtp.PlainAuth("", address, password, host)
-	//
-	//if err := smtp.SendMail(host+":"+port, auth, address, emails, msg); err != nil {
-	//	fmt.Println(err)
-	//	return 500, "Помилка відправки emailʼів"
-	//}
-	//
-	//return 200, "email відправлено"
-
 }
