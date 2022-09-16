@@ -16,7 +16,7 @@ func (*EmailFile) SaveEmailToFile(email string) int {
 		fileModePermutation = 0644
 	)
 
-	file, err := os.OpenFile("email", fileModeFlags, fileModePermutation)
+	file, err := os.OpenFile("emails", fileModeFlags, fileModePermutation)
 
 	if err != nil {
 		return 500
@@ -33,6 +33,23 @@ func (*EmailFile) SaveEmailToFile(email string) int {
 
 	return 400
 
+}
+
+func (*EmailFile) GetEmails() []string {
+	file, err := os.Open("emails")
+	if err != nil {
+		return nil
+	}
+	defer safelyClose(file)
+
+	var lines []string
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	return lines
 }
 
 func safelyClose(file *os.File) {

@@ -29,3 +29,12 @@ func subscribe(c *gin.Context) {
 	subscriptionController.SaveEmail(email.Email, c)
 
 }
+
+func sendEmails(c *gin.Context) {
+	emailsFile := repository.EmailFile{}
+	fileService := services.NewFileService(&emailsFile)
+	notificationService := services.NewNotificationService(services.RateService{}, *fileService)
+	notificationController := controllers.NewNotificationController(notificationService)
+
+	notificationController.SendEmails(c)
+}

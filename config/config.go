@@ -9,8 +9,12 @@ import (
 )
 
 type Config struct {
-	ServerURL   string
-	CoinGekoURL string
+	ServerURL     string
+	CoinGekoURL   string
+	EmailAddress  string
+	EmailPassword string
+	SMTPHost      string
+	SMTPPort      string
 }
 
 var (
@@ -22,8 +26,12 @@ func Get() *Config {
 	once.Do(func() {
 		loadEnv()
 		cfg = Config{
-			ServerURL:   os.Getenv(ServerURL),
-			CoinGekoURL: os.Getenv(CoinGekoURL),
+			ServerURL:     os.Getenv(ServerURL),
+			CoinGekoURL:   os.Getenv(CoinGekoURL),
+			EmailAddress:  os.Getenv(EmailAddress),
+			EmailPassword: os.Getenv(EmailPassword),
+			SMTPHost:      os.Getenv(SMTPHost),
+			SMTPPort:      os.Getenv(SMTPPort),
 		}
 	})
 	return &cfg
@@ -32,8 +40,6 @@ func Get() *Config {
 func loadEnv() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		// in case we test from inner directories;
-		// sequence to go to the upper one
 		err = godotenv.Load("./../.env")
 		if err != nil {
 			log.Fatal(err)

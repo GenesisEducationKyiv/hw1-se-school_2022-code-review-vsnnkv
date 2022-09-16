@@ -2,7 +2,7 @@ package services
 
 type FileRepository interface {
 	SaveEmailToFile(email string) int
-	//GetEmails() []string
+	GetEmails() []string
 }
 
 type FileService struct {

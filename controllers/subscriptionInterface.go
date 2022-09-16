@@ -1,7 +1,7 @@
 package controllers
 
 type SubscriptionService interface {
-	SaveEmail(email string) int
+	SaveEmail(email string) (int, string)
 }
 
 type SubscriptionController struct {
