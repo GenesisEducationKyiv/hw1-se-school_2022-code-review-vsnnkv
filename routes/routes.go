@@ -28,3 +28,7 @@ func (h *Handler) CreateRoute() {
 
 	router.Run()
 }
+
+func FileInit() {
+
+}

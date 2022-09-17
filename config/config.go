@@ -15,6 +15,7 @@ type Config struct {
 	EmailPassword string
 	SMTPHost      string
 	SMTPPort      string
+	EmailFile     string
 }
 
 var (
@@ -32,6 +33,7 @@ func Get() *Config {
 			EmailPassword: os.Getenv(EmailPassword),
 			SMTPHost:      os.Getenv(SMTPHost),
 			SMTPPort:      os.Getenv(SMTPPort),
+			EmailFile:     os.Getenv(EmailFile),
 		}
 	})
 	return &cfg

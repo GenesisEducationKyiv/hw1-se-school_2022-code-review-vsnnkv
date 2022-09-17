@@ -10,29 +10,50 @@ import (
 type EmailFile struct {
 }
 
-func (*EmailFile) SaveEmailToFile(email string) int {
-	const (
-		fileModeFlags       = os.O_APPEND | os.O_CREATE | os.O_RDWR
-		fileModePermutation = 0644
-	)
+const (
+	fileModeFlags       = os.O_APPEND | os.O_CREATE | os.O_RDWR
+	fileModePermutation = 0644
+)
+
+func (*EmailFile) SaveEmailToFile(email string) error {
 
 	file, err := os.OpenFile("emails", fileModeFlags, fileModePermutation)
 
 	if err != nil {
-		return 500
+		return err
 	}
 
 	defer safelyClose(file)
 
-	scanner := bufio.NewScanner(file)
-	if !lookIfIsEmailInTheList(scanner, email) {
-		_, err := file.WriteString(email + "\n")
-		log.Printf("error: %v", err)
-		return 200
+	_, err = file.WriteString(email + "\n")
+	log.Printf("error: %v", err)
+	return err
+
+}
+
+func (*EmailFile) IsExists(email string) (bool, error) {
+	file, err := os.OpenFile("emails", fileModeFlags, fileModePermutation)
+	if err != nil {
+		log.Fatal("Problems with opening a file.")
+		return false, err
 	}
 
-	return 400
+	scanner := bufio.NewScanner(file)
 
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+		print(scanner.Text())
+		if scanner.Text() == email {
+			return true, nil
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+		return false, err
+	}
+
+	return false, nil
 }
 
 func (*EmailFile) GetEmails() []string {
@@ -57,18 +78,4 @@ func safelyClose(file *os.File) {
 	if err != nil {
 		log.Fatal("Problem with closing a data file.")
 	}
-}
-
-func lookIfIsEmailInTheList(scanner *bufio.Scanner, email string) bool {
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
-		print(scanner.Text())
-		if scanner.Text() == email {
-			return true
-		}
-	}
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-	return false
 }

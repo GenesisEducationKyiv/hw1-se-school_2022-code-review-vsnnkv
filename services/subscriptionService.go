@@ -16,16 +16,21 @@ func (s *SubscriptionService) SaveEmail(email string) (int, string) {
 	if !isEmailValid(email) {
 		return 409, "email not valid"
 	}
-	code := s.fileService.repository.SaveEmailToFile(email)
+	exist, err := s.fileService.repository.IsExists(email)
 
-	switch code {
-	case 200:
-		return 200, "Email додано"
-	case 400:
-		return 400, "Email вже було додано"
-	default:
+	if err != nil {
 		return 500, "Помилка сервера"
 	}
+
+	if exist {
+		return 400, "Email вже було додано"
+	}
+
+	err = s.fileService.repository.SaveEmailToFile(email)
+	if err != nil {
+		return 400, "Помилка збереження файла"
+	}
+	return 200, "Email додано"
 }
 
 func isEmailValid(email string) bool {

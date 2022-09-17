@@ -1,7 +1,8 @@
 package services
 
 type FileRepository interface {
-	SaveEmailToFile(email string) int
+	SaveEmailToFile(email string) error
+	IsExists(email string) (bool, error)
 	GetEmails() []string
 }
 
