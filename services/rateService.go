@@ -10,6 +10,10 @@ import (
 type RateService struct {
 }
 
+const (
+	backupFlag = "coinbase"
+)
+
 func (*RateService) GetRate() (int64, error) {
 
 	cfg := config.Get()
@@ -22,9 +26,26 @@ func (*RateService) GetRate() (int64, error) {
 	}
 
 	rate, err := method.GetRateFromProvider()
+	if err != nil {
+		rate, err = callBackup(backupFlag)
+	}
 
 	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
 	cache.Set("BtcToUAHrate", rate, 5*time.Minute)
+	return rate, err
+
+}
+
+func callBackup(newFlag string) (int64, error) {
+	method, err := rateFactory.GetSomeRate(newFlag)
+	if err != nil {
+		return 0, err
+	}
+	rate, err := method.GetRateFromProvider()
+	if err != nil {
+		return 0, err
+	}
+
 	return rate, err
 
 }

@@ -5,10 +5,13 @@ import "errors"
 func GetSomeRate(flag string) (IRate, error) {
 	switch flag {
 	case "coinGeko":
-		return NewCoinGekoRate(), nil
+		return newCoinGekoRate(), nil
 
 	case "binance":
-		return NewBinanceRate(), nil
+		return newBinanceRate(), nil
+
+	case "coinbase":
+		return newCoinbaseRate(), nil
 
 	default:
 		err := errors.New("Передано некоректний флаг")

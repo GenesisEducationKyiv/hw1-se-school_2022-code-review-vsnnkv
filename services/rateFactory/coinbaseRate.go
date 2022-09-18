@@ -8,32 +8,29 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
-type binanceRate struct {
+type coinbaseRate struct {
 	Rate
 }
 
-func newBinanceRate() IRate {
-	rate, err := getBinanceRateBtcToUah()
-	return &Rate{rateBtcToUah: rate, err: err}
-
+func newCoinbaseRate() IRate {
+	rate, err := getCoinGekoRateBtcToUah()
+	return &Rate{rateBtcToUah: rate,
+		err: err}
 }
 
-func getBinanceRateBtcToUah() (int64, error) {
+func getCoinbaseRateBtcToUah() (int64, error) {
 	cfg := config.Get()
 
-	resp, err := http.Get(cfg.BinanceUrl)
+	resp, err := http.Get(cfg.CoinGekoURL)
 
 	if err != nil {
 		return 0, err
 	}
 
-	var cryptoRate models.BinanceResponse
-	//if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
-	//	return 0, err
-	//}
+	var cryptoRate models.CoinbaseResponseDTO
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return 0, err
@@ -46,7 +43,7 @@ func getBinanceRateBtcToUah() (int64, error) {
 	fmt.Printf("Code: %d\n", resp.StatusCode)
 	fmt.Printf("Body: %s\n", body)
 
-	rate := trimStringFromDot(cryptoRate.Uah)
+	rate := trimStringFromDot(cryptoRate.Data.Uah)
 
 	i, err := strconv.ParseInt(rate, 10, 64)
 
@@ -55,12 +52,4 @@ func getBinanceRateBtcToUah() (int64, error) {
 	}
 
 	return i, nil
-
-}
-
-func trimStringFromDot(s string) string {
-	if idx := strings.Index(s, "."); idx != -1 {
-		return s[:idx]
-	}
-	return s
 }

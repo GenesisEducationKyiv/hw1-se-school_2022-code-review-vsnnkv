@@ -13,7 +13,7 @@ type coinGekoRate struct {
 	Rate
 }
 
-func NewCoinGekoRate() IRate {
+func newCoinGekoRate() IRate {
 	rate, err := getCoinGekoRateBtcToUah()
 	return &Rate{rateBtcToUah: rate,
 		err: err}
