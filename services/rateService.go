@@ -1,28 +1,26 @@
 package services
 
 import (
-	"encoding/json"
 	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/models"
-	"net/http"
+	"github.com/vsnnkv/btcApplicationGo/services/rateFactory"
 )
 
 type RateService struct {
 }
 
 func (*RateService) GetRate() (int64, error) {
-	cfg := config.Get()
 
-	resp, err := http.Get(cfg.CoinGekoURL)
+	cfg := config.Get()
+	flag := cfg.RateFlag
+
+	method, err := rateFactory.GetSomeRate(flag)
 
 	if err != nil {
 		return 0, err
 	}
 
-	var cryptoRate models.CoinGekoResponseDTO
-	if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
-		return 0, err
-	}
+	rate, err := method.GetRateFromProvider()
 
-	return cryptoRate.Bitkoin.Uah, nil
+	return rate, err
+
 }
