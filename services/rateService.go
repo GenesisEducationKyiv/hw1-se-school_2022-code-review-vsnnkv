@@ -24,7 +24,7 @@ func (*RateService) GetRate() (int64, error) {
 	rate, err := method.GetRateFromProvider()
 
 	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
-	cache.Set("BtctoUAHrate", rate, 5*time.Minute)
+	cache.Set("BtcToUAHrate", rate, 5*time.Minute)
 	return rate, err
 
 }

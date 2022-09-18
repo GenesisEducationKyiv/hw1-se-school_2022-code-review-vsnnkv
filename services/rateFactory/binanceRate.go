@@ -2,8 +2,10 @@ package rateFactory
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/vsnnkv/btcApplicationGo/config"
 	"github.com/vsnnkv/btcApplicationGo/models"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -29,9 +31,20 @@ func getBinanceRateBtcToUah() (int64, error) {
 	}
 
 	var cryptoRate models.BinanceResponse
-	if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
+	//if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
+	//	return 0, err
+	//}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
 		return 0, err
 	}
+
+	if err = json.Unmarshal(body, &cryptoRate); err != nil {
+		return 0, err
+	}
+
+	fmt.Printf("Code: %d\n", resp.StatusCode)
+	fmt.Printf("Body: %s\n", body)
 
 	rate := trimStringFromDot(cryptoRate.Uah)
 
