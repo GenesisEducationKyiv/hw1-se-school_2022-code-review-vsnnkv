@@ -9,4 +9,4 @@ To run Docker:
 2. docker run --name=btc-app -p 8080:8080 btc-app    
 
 Архітектура:
-https://app.diagrams.net/#Lbtc-application-layers
+<img width="791" alt="Знімок екрана 2022-09-25 о 21 25 07" src="https://user-images.githubusercontent.com/90768726/192159231-ef9ec692-850d-46ba-a797-90dd822d2207.png">
