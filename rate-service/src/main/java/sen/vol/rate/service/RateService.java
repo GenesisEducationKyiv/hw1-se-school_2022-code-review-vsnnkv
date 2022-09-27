@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import sen.vol.rate.model.RateResponseDTO;
 
 @Service
-public class RateService {
+public class RateService implements RateServiceInterface {
 
     private final RestTemplate restTemplate;
     private final String coinGeckoSimpleApiUrl;

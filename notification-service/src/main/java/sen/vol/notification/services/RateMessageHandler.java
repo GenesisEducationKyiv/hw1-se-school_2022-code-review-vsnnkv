@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import sen.vol.notification.config.RabbitMQConfig;
 
 @Service
-//@RequiredArgsConstructor
 public class RateMessageHandler {
     private final JavaMailSender javaMailSender;
     private final Logger LOGGER = LoggerFactory.getLogger(RateMessageHandler.class);
@@ -26,12 +25,11 @@ public class RateMessageHandler {
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_RATE)
     public void receive(Message message) throws JsonProcessingException {
-        System.out.println(message);
         byte[] body = message.getBody();
         String jsonBody = new String(body);
         ObjectMapper objectMapper = new ObjectMapper();
         RateResponseDTO rateResponseDTO = objectMapper.readValue(jsonBody, RateResponseDTO.class);
-        LOGGER.info(rateResponseDTO.toString());
+        LOGGER.info("get rate btc to uah {}", rateResponseDTO.toString());
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(rateResponseDTO.getMail());
