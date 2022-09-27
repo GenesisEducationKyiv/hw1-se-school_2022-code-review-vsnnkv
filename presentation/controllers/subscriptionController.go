@@ -4,7 +4,16 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/vsnnkv/btcApplicationGo/models"
+	"github.com/vsnnkv/btcApplicationGo/services"
 )
+
+type SubscriptionController struct {
+	subscriptionService services.SubscriptionServiceInterface
+}
+
+func NewSubscriptionController(s services.SubscriptionServiceInterface) *SubscriptionController {
+	return &SubscriptionController{subscriptionService: s}
+}
 
 func (controller *SubscriptionController) SaveEmail(c *gin.Context) {
 	var email models.Email

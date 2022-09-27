@@ -1,7 +1,7 @@
-package routes
+package presentation
 
 import (
-	"github.com/vsnnkv/btcApplicationGo/controllers"
+	"github.com/vsnnkv/btcApplicationGo/presentation/controllers"
 	"github.com/vsnnkv/btcApplicationGo/repository"
 	"github.com/vsnnkv/btcApplicationGo/services"
 )

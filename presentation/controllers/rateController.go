@@ -1,10 +1,19 @@
 package controllers
 
 import (
+	"github.com/vsnnkv/btcApplicationGo/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+type RateController struct {
+	service services.RateServiceInterface
+}
+
+func NewRateController(s services.RateServiceInterface) *RateController {
+	return &RateController{service: s}
+}
 
 func (controller *RateController) Get(c *gin.Context) {
 

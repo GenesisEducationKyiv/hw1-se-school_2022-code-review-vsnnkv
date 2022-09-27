@@ -6,6 +6,10 @@ import (
 	"strconv"
 )
 
+type NotificationServiceInterface interface {
+	SendEmails() (int, string)
+}
+
 type NotificationService struct {
 	rateService RateService
 	fileService FileService

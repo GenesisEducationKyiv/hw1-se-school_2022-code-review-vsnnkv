@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+type RateServiceInterface interface {
+	GetRate() (int64, error)
+}
+
 type RateService struct {
 }
 

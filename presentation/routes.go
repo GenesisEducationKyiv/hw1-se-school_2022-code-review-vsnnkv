@@ -1,17 +1,17 @@
-package routes
+package presentation
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/vsnnkv/btcApplicationGo/controllers"
+	controllers2 "github.com/vsnnkv/btcApplicationGo/presentation/controllers"
 )
 
 type Handler struct {
-	rateController         *controllers.RateController
-	subscriptionController *controllers.SubscriptionController
-	notificationController *controllers.NotificationController
+	rateController         *controllers2.RateController
+	subscriptionController *controllers2.SubscriptionController
+	notificationController *controllers2.NotificationController
 }
 
-func New(r *controllers.RateController, s *controllers.SubscriptionController, n *controllers.NotificationController) *Handler {
+func New(r *controllers2.RateController, s *controllers2.SubscriptionController, n *controllers2.NotificationController) *Handler {
 	return &Handler{
 		rateController:         r,
 		subscriptionController: s,
@@ -27,8 +27,4 @@ func (h *Handler) CreateRoute() {
 	router.GET("/api/sendEmails", h.notificationController.SendEmails)
 
 	router.Run()
-}
-
-func FileInit() {
-
 }

@@ -7,6 +7,12 @@ import (
 	"os"
 )
 
+type FileRepository interface {
+	SaveEmailToFile(email string) error
+	IsExists(email string) (bool, error)
+	GetEmails() []string
+}
+
 type EmailFile struct {
 }
 

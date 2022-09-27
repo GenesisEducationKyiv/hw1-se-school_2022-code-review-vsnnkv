@@ -4,6 +4,10 @@ import (
 	"net/mail"
 )
 
+type SubscriptionServiceInterface interface {
+	SaveEmail(email string) (int, string)
+}
+
 type SubscriptionService struct {
 	fileService FileService
 }
