@@ -11,10 +11,14 @@ import (
 type Config struct {
 	ServerURL     string
 	CoinGekoURL   string
+	BinanceUrl    string
+	CoinbaseUrl   string
 	EmailAddress  string
 	EmailPassword string
 	SMTPHost      string
 	SMTPPort      string
+	EmailFile     string
+	RateFlag      string
 }
 
 var (
@@ -28,10 +32,14 @@ func Get() *Config {
 		cfg = Config{
 			ServerURL:     os.Getenv(ServerURL),
 			CoinGekoURL:   os.Getenv(CoinGekoURL),
+			BinanceUrl:    os.Getenv(BinanceUrl),
+			CoinbaseUrl:   os.Getenv(CoinbaseUrl),
 			EmailAddress:  os.Getenv(EmailAddress),
 			EmailPassword: os.Getenv(EmailPassword),
 			SMTPHost:      os.Getenv(SMTPHost),
 			SMTPPort:      os.Getenv(SMTPPort),
+			EmailFile:     os.Getenv(EmailFile),
+			RateFlag:      os.Getenv(RateFlag),
 		}
 	})
 	return &cfg

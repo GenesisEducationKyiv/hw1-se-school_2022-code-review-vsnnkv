@@ -1,28 +1,51 @@
 package services
 
 import (
-	"encoding/json"
 	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/models"
-	"net/http"
+	"github.com/vsnnkv/btcApplicationGo/services/rateFactory"
+	"github.com/vsnnkv/btcApplicationGo/tools"
+	"time"
 )
 
 type RateService struct {
 }
 
-func (*RateService) GetRate() (int64, error) {
-	cfg := config.Get()
+const (
+	backupFlag = "coinbase"
+)
 
-	resp, err := http.Get(cfg.CoinGekoURL)
+func (*RateService) GetRate() (int64, error) {
+
+	cfg := config.Get()
+	flag := cfg.RateFlag
+
+	method, err := rateFactory.GetSomeRate(flag)
 
 	if err != nil {
 		return 0, err
 	}
 
-	var cryptoRate models.CoinGekoResponseDTO
-	if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
+	rate, err := method.GetRateFromProvider()
+	if err != nil {
+		rate, err = callBackup(backupFlag)
+	}
+
+	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
+	cache.Set("BtcToUAHrate", rate, 5*time.Minute)
+	return rate, err
+
+}
+
+func callBackup(newFlag string) (int64, error) {
+	method, err := rateFactory.GetSomeRate(newFlag)
+	if err != nil {
+		return 0, err
+	}
+	rate, err := method.GetRateFromProvider()
+	if err != nil {
 		return 0, err
 	}
 
-	return cryptoRate.Bitkoin.Uah, nil
+	return rate, err
+
 }
