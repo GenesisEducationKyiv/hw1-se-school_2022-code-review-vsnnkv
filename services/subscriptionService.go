@@ -1,11 +1,12 @@
 package services
 
 import (
+	"errors"
 	"net/mail"
 )
 
 type SubscriptionServiceInterface interface {
-	SaveEmail(email string) (int, string)
+	SaveEmail(email string) error
 }
 
 type SubscriptionService struct {
@@ -16,25 +17,25 @@ func NewSubscriptionService(f FileService) *SubscriptionService {
 	return &SubscriptionService{fileService: f}
 }
 
-func (s *SubscriptionService) SaveEmail(email string) (int, string) {
+func (s *SubscriptionService) SaveEmail(email string) error {
 	if !isEmailValid(email) {
-		return 409, "email not valid"
+		return errors.New("email not valid")
 	}
 	exist, err := s.fileService.repository.IsExists(email)
 
 	if err != nil {
-		return 500, "Помилка сервера"
+		return errors.New("Помилка сервера")
 	}
 
 	if exist {
-		return 400, "Email вже було додано"
+		return errors.New("Email вже було додано")
 	}
 
 	err = s.fileService.repository.SaveEmailToFile(email)
 	if err != nil {
-		return 400, "Помилка збереження файла"
+		return errors.New("Помилка збереження файла")
 	}
-	return 200, "Email додано"
+	return nil
 }
 
 func isEmailValid(email string) bool {

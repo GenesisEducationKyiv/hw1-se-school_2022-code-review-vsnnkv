@@ -1,4 +1,4 @@
-package models
+package rateProviders
 
 type CoinbaseResponseDTO struct {
 	Data coinResponseDTO `json:"data"`

@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/vsnnkv/btcApplicationGo/services"
+	"net/http"
 )
 
 type NotificationController struct {
@@ -14,7 +15,11 @@ func NewNotificationController(n services.NotificationServiceInterface) *Notific
 }
 
 func (controller *NotificationController) SendEmails(c *gin.Context) {
-	code, message := controller.notificationService.SendEmails()
+	err := controller.notificationService.SendEmails()
 
-	c.String(code, message)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	} else {
+		c.String(http.StatusOK, "email відправлено")
+	}
 }

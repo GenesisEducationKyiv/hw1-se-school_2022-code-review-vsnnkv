@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/vsnnkv/btcApplicationGo/models"
 	"github.com/vsnnkv/btcApplicationGo/services"
+	"net/http"
 )
 
 type SubscriptionController struct {
@@ -16,12 +16,21 @@ func NewSubscriptionController(s services.SubscriptionServiceInterface) *Subscri
 }
 
 func (controller *SubscriptionController) SaveEmail(c *gin.Context) {
-	var email models.Email
-	if err := c.BindJSON(&email); err != nil {
+	var passedParam email
+	if err := c.BindJSON(&passedParam); err != nil {
 		fmt.Printf("failed  %s\n", err.Error())
 		return
 	}
-	code, message := controller.subscriptionService.SaveEmail(email.Email)
 
-	c.String(code, message)
+	err := controller.subscriptionService.SaveEmail(passedParam.email)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	} else {
+		c.String(http.StatusOK, "Email додано")
+	}
+
+}
+
+type email struct {
+	email string `form:"email" binding:"required"`
 }

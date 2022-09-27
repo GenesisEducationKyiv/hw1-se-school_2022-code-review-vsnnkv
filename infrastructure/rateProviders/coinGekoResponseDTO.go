@@ -1,4 +1,4 @@
-package models
+package rateProviders
 
 type CoinGekoResponseDTO struct {
 	Bitkoin bitcoinResponseDTO `json:"bitcoin"`

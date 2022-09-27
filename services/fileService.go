@@ -1,6 +1,8 @@
 package services
 
-import "github.com/vsnnkv/btcApplicationGo/repository"
+import (
+	"github.com/vsnnkv/btcApplicationGo/infrastructure/repository"
+)
 
 type FileService struct {
 	repository repository.FileRepository

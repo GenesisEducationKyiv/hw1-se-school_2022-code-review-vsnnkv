@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/services/rateFactory"
+	"github.com/vsnnkv/btcApplicationGo/infrastructure/rateProviders"
 	"github.com/vsnnkv/btcApplicationGo/tools"
 	"time"
 )
@@ -12,18 +12,23 @@ type RateServiceInterface interface {
 }
 
 type RateService struct {
+	rateProviders rateProviders.IRateProvider
+}
+
+func NewRateService(r rateProviders.IRateProvider) *RateService {
+	return &RateService{rateProviders: r}
 }
 
 const (
 	backupFlag = "coinbase"
 )
 
-func (*RateService) GetRate() (int64, error) {
+func (rateService *RateService) GetRate() (int64, error) {
 
 	cfg := config.Get()
 	flag := cfg.RateFlag
 
-	method, err := rateFactory.GetSomeRate(flag)
+	method, err := rateService.rateProviders.GetSomeRate(flag)
 
 	if err != nil {
 		return 0, err
@@ -31,7 +36,7 @@ func (*RateService) GetRate() (int64, error) {
 
 	rate, err := method.GetRateFromProvider()
 	if err != nil {
-		rate, err = callBackup(backupFlag)
+		rate, err = rateService.callBackup(backupFlag)
 	}
 
 	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
@@ -40,8 +45,8 @@ func (*RateService) GetRate() (int64, error) {
 
 }
 
-func callBackup(newFlag string) (int64, error) {
-	method, err := rateFactory.GetSomeRate(newFlag)
+func (rateService *RateService) callBackup(newFlag string) (int64, error) {
+	method, err := rateService.rateProviders.GetSomeRate(newFlag)
 	if err != nil {
 		return 0, err
 	}

@@ -1,10 +1,9 @@
-package rateFactory
+package rateProviders
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/models"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -30,7 +29,7 @@ func getBinanceRateBtcToUah() (int64, error) {
 		return 0, err
 	}
 
-	var cryptoRate models.BinanceResponse
+	var cryptoRate BinanceResponse
 	//if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
 	//	return 0, err
 	//}

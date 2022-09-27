@@ -1,25 +1,25 @@
-package rateFactory
+package rateProviders
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/models"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
-type coinGekoRate struct {
+type coinbaseRate struct {
 	Rate
 }
 
-func newCoinGekoRate() IRate {
+func newCoinbaseRate() IRate {
 	rate, err := getCoinGekoRateBtcToUah()
 	return &Rate{rateBtcToUah: rate,
 		err: err}
 }
 
-func getCoinGekoRateBtcToUah() (int64, error) {
+func getCoinbaseRateBtcToUah() (int64, error) {
 	cfg := config.Get()
 
 	resp, err := http.Get(cfg.CoinGekoURL)
@@ -28,10 +28,8 @@ func getCoinGekoRateBtcToUah() (int64, error) {
 		return 0, err
 	}
 
-	var cryptoRate models.CoinGekoResponseDTO
-	//if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
-	//	return 0, err
-	//}
+	var cryptoRate CoinbaseResponseDTO
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return 0, err
@@ -44,5 +42,13 @@ func getCoinGekoRateBtcToUah() (int64, error) {
 	fmt.Printf("Code: %d\n", resp.StatusCode)
 	fmt.Printf("Body: %s\n", body)
 
-	return cryptoRate.Bitkoin.Uah, nil
+	rate := trimStringFromDot(cryptoRate.Data.Uah)
+
+	i, err := strconv.ParseInt(rate, 10, 64)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return i, nil
 }

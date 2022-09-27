@@ -1,13 +1,14 @@
 package services
 
 import (
+	"errors"
 	"github.com/vsnnkv/btcApplicationGo/config"
 	"gopkg.in/gomail.v2"
 	"strconv"
 )
 
 type NotificationServiceInterface interface {
-	SendEmails() (int, string)
+	SendEmails() error
 }
 
 type NotificationService struct {
@@ -19,16 +20,16 @@ func NewNotificationService(r RateService, f FileService) *NotificationService {
 	return &NotificationService{rateService: r, fileService: f}
 }
 
-func (n *NotificationService) SendEmails() (int, string) {
+func (n *NotificationService) SendEmails() error {
 	emails := n.fileService.repository.GetEmails()
 
 	if len(emails) == 0 {
-		return 409, "Відсутні emailʼи"
+		return errors.New("Відсутні emailʼи")
 	}
 
 	rate, err := n.rateService.GetRate()
 	if err != nil {
-		return 500, "Помилка отримання курсу"
+		return errors.New("Помилка отримання курсу")
 	}
 
 	var cfg = config.Get()
@@ -37,7 +38,7 @@ func (n *NotificationService) SendEmails() (int, string) {
 	host := cfg.SMTPHost
 	port, _ := strconv.Atoi(cfg.SMTPPort)
 
-	msg := "курс BTC до UAH відповідно до данних сайту coingecko.com складає: " + strconv.FormatInt(rate, 10)
+	msg := "курс BTC до UAH складає: " + strconv.FormatInt(rate, 10)
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", address)
@@ -49,7 +50,7 @@ func (n *NotificationService) SendEmails() (int, string) {
 
 	if err := d.DialAndSend(m); err != nil {
 		panic(err)
-		return 500, "Помилка відправки emailʼів"
+		return errors.New("Помилка відправки emailʼів")
 	}
-	return 200, "email відправлено"
+	return nil
 }
