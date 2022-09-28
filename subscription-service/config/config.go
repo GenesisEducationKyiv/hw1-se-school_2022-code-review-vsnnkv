@@ -9,10 +9,7 @@ import (
 )
 
 type Config struct {
-	ServerURL     string
-	CoinGekoURL   string
-	BinanceUrl    string
-	CoinbaseUrl   string
+	ServerPort    string
 	EmailAddress  string
 	EmailPassword string
 	SMTPHost      string
@@ -30,10 +27,7 @@ func Get() *Config {
 	once.Do(func() {
 		loadEnv()
 		cfg = Config{
-			ServerURL:     os.Getenv(ServerURL),
-			CoinGekoURL:   os.Getenv(CoinGekoURL),
-			BinanceUrl:    os.Getenv(BinanceUrl),
-			CoinbaseUrl:   os.Getenv(CoinbaseUrl),
+			ServerPort:    os.Getenv(ServerPort),
 			EmailAddress:  os.Getenv(EmailAddress),
 			EmailPassword: os.Getenv(EmailPassword),
 			SMTPHost:      os.Getenv(SMTPHost),
@@ -48,7 +42,7 @@ func Get() *Config {
 func loadEnv() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		err = godotenv.Load("./../.env")
+		err = godotenv.Load("./subscription-service/.env")
 		if err != nil {
 			log.Fatal(err)
 		}

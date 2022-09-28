@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/vsnnkv/btcApplicationGo/config"
 	controllers2 "github.com/vsnnkv/btcApplicationGo/presentation/controllers"
 )
 
@@ -22,9 +23,11 @@ func New(r *controllers2.RateController, s *controllers2.SubscriptionController,
 func (h *Handler) CreateRoute() {
 	router := gin.Default()
 
+	var cfg = config.Get()
+
 	router.GET("/api/rate", h.rateController.Get)
 	router.POST("/api/subscribe", h.subscriptionController.SaveEmail)
 	router.GET("/api/sendEmails", h.notificationController.SendEmails)
 
-	router.Run()
+	router.Run(cfg.ServerPort)
 }

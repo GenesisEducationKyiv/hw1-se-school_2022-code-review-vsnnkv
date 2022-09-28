@@ -1,9 +1,9 @@
 package services
 
 import (
-	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/infrastructure/rateProviders"
-	"github.com/vsnnkv/btcApplicationGo/tools"
+	"github.com/vsnnkv/btcApplicationGo/rate-service/config"
+	"github.com/vsnnkv/btcApplicationGo/rate-service/infrastructure/rateProviders"
+	"github.com/vsnnkv/btcApplicationGo/rate-service/tools"
 	"time"
 )
 

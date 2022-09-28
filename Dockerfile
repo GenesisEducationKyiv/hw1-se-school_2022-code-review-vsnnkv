@@ -1,8 +1,8 @@
 FROM golang:1.18-alpine
 EXPOSE 8080
 
-COPY go.mod ./
-COPY go.sum ./
+COPY subscription-service/go.mod ./
+COPY subscription-service/go.sum ./
 ENV GOPATH=/
 
 RUN go mod download

@@ -3,7 +3,7 @@ package rateProviders
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/vsnnkv/btcApplicationGo/config"
+	"github.com/vsnnkv/btcApplicationGo/rate-service/config"
 	"io/ioutil"
 	"net/http"
 	"strconv"

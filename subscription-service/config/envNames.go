@@ -1,10 +1,7 @@
 package config
 
 const (
-	ServerURL     string = "SERVER_URL"
-	CoinGekoURL   string = "COIN_GEKO_URL"
-	BinanceUrl    string = "BINANCE_URL"
-	CoinbaseUrl   string = "COINBASE_URL"
+	ServerPort    string = "SERVER_PORT"
 	EmailAddress  string = "EMAIL_ADDRESS"
 	EmailPassword string = "EMAIL_PASSWORD"
 	SMTPHost      string = "SMTP_HOST"
