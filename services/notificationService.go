@@ -12,16 +12,16 @@ type NotificationServiceInterface interface {
 }
 
 type NotificationService struct {
-	rateService RateService
-	fileService FileService
+	rateService  RateService
+	emailService EmailService
 }
 
-func NewNotificationService(r RateService, f FileService) *NotificationService {
-	return &NotificationService{rateService: r, fileService: f}
+func NewNotificationService(r RateService, f EmailService) *NotificationService {
+	return &NotificationService{rateService: r, emailService: f}
 }
 
 func (n *NotificationService) SendEmails() error {
-	emails := n.fileService.repository.GetEmails()
+	emails := n.emailService.repository.GetEmails()
 
 	if len(emails) == 0 {
 		return errors.New("Відсутні emailʼи")

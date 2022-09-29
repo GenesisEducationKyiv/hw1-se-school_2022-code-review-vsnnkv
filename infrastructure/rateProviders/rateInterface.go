@@ -1,5 +1,5 @@
 package rateProviders
 
-type IRate interface {
+type RateInterface interface {
 	GetRateFromProvider() (int64, error)
 }

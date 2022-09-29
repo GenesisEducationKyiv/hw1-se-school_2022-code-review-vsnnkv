@@ -10,18 +10,18 @@ type SubscriptionServiceInterface interface {
 }
 
 type SubscriptionService struct {
-	fileService FileService
+	emailService EmailService
 }
 
-func NewSubscriptionService(f FileService) *SubscriptionService {
-	return &SubscriptionService{fileService: f}
+func NewSubscriptionService(f EmailService) *SubscriptionService {
+	return &SubscriptionService{emailService: f}
 }
 
 func (s *SubscriptionService) SaveEmail(email string) error {
 	if !isEmailValid(email) {
 		return errors.New("email not valid")
 	}
-	exist, err := s.fileService.repository.IsExists(email)
+	exist, err := s.emailService.repository.IsExists(email)
 
 	if err != nil {
 		return errors.New("Помилка сервера")
@@ -31,7 +31,7 @@ func (s *SubscriptionService) SaveEmail(email string) error {
 		return errors.New("Email вже було додано")
 	}
 
-	err = s.fileService.repository.SaveEmailToFile(email)
+	err = s.emailService.repository.SaveEmailToFile(email)
 	if err != nil {
 		return errors.New("Помилка збереження файла")
 	}

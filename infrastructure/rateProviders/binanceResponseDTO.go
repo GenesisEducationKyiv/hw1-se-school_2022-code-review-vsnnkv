@@ -1,5 +1,5 @@
 package rateProviders
 
-type BinanceResponse struct {
+type binanceResponse struct {
 	Uah string `json:"price"`
 }

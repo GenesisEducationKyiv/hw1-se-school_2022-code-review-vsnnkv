@@ -3,7 +3,6 @@ package rateProviders
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/vsnnkv/btcApplicationGo/config"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -14,14 +13,15 @@ type binanceRate struct {
 	Rate
 }
 
-func newBinanceRate() IRate {
+func newBinanceRate() RateInterface {
 	rate, err := getBinanceRateBtcToUah()
 	return &Rate{rateBtcToUah: rate, err: err}
 
 }
 
 func getBinanceRateBtcToUah() (int64, error) {
-	cfg := config.Get()
+	var cfg rateConfig
+	cfg.getConf()
 
 	resp, err := http.Get(cfg.BinanceUrl)
 
@@ -29,10 +29,8 @@ func getBinanceRateBtcToUah() (int64, error) {
 		return 0, err
 	}
 
-	var cryptoRate BinanceResponse
-	//if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
-	//	return 0, err
-	//}
+	var cryptoRate binanceResponse
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return 0, err

@@ -12,10 +12,10 @@ type RateServiceInterface interface {
 }
 
 type RateService struct {
-	rateProviders rateProviders.IRateProvider
+	rateProviders rateProviders.RateProviderInterface
 }
 
-func NewRateService(r rateProviders.IRateProvider) *RateService {
+func NewRateService(r rateProviders.RateProviderInterface) *RateService {
 	return &RateService{rateProviders: r}
 }
 
@@ -28,7 +28,7 @@ func (rateService *RateService) GetRate() (int64, error) {
 	cfg := config.Get()
 	flag := cfg.RateFlag
 
-	method, err := rateService.rateProviders.GetSomeRate(flag)
+	method, err := rateService.rateProviders.CreateRateMethod(flag)
 
 	if err != nil {
 		return 0, err
@@ -46,7 +46,7 @@ func (rateService *RateService) GetRate() (int64, error) {
 }
 
 func (rateService *RateService) callBackup(newFlag string) (int64, error) {
-	method, err := rateService.rateProviders.GetSomeRate(newFlag)
+	method, err := rateService.rateProviders.CreateRateMethod(newFlag)
 	if err != nil {
 		return 0, err
 	}

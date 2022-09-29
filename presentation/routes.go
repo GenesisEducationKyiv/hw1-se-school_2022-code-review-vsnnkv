@@ -2,16 +2,16 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	controllers2 "github.com/vsnnkv/btcApplicationGo/presentation/controllers"
+	"github.com/vsnnkv/btcApplicationGo/presentation/controllers"
 )
 
 type Handler struct {
-	rateController         *controllers2.RateController
-	subscriptionController *controllers2.SubscriptionController
-	notificationController *controllers2.NotificationController
+	rateController         *controllers.RateController
+	subscriptionController *controllers.SubscriptionController
+	notificationController *controllers.NotificationController
 }
 
-func New(r *controllers2.RateController, s *controllers2.SubscriptionController, n *controllers2.NotificationController) *Handler {
+func New(r *controllers.RateController, s *controllers.SubscriptionController, n *controllers.NotificationController) *Handler {
 	return &Handler{
 		rateController:         r,
 		subscriptionController: s,

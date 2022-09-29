@@ -1,6 +1,6 @@
 package rateProviders
 
-type CoinGekoResponseDTO struct {
+type coinGekoResponseDTO struct {
 	Bitkoin bitcoinResponseDTO `json:"bitcoin"`
 }
 

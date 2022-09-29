@@ -8,10 +8,10 @@ import (
 )
 
 func InitHandler() {
-	emailsFile := repository.EmailFile{}
+	emailsFile := repository.EmailRepository{}
 	rateProvider := rateProviders.RateProvider{}
 
-	fileService := services.NewFileService(&emailsFile)
+	fileService := services.NewEmailService(&emailsFile)
 	subscriptionService := services.NewSubscriptionService(*fileService)
 	notificationService := services.NewNotificationService(services.RateService{}, *fileService)
 	rateService := services.NewRateService(&rateProvider)

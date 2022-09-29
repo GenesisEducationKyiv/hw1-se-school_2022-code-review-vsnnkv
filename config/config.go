@@ -31,9 +31,6 @@ func Get() *Config {
 		loadEnv()
 		cfg = Config{
 			ServerURL:     os.Getenv(ServerURL),
-			CoinGekoURL:   os.Getenv(CoinGekoURL),
-			BinanceUrl:    os.Getenv(BinanceUrl),
-			CoinbaseUrl:   os.Getenv(CoinbaseUrl),
 			EmailAddress:  os.Getenv(EmailAddress),
 			EmailPassword: os.Getenv(EmailPassword),
 			SMTPHost:      os.Getenv(SMTPHost),

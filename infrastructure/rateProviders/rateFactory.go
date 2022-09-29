@@ -2,14 +2,14 @@ package rateProviders
 
 import "errors"
 
-type IRateProvider interface {
-	GetSomeRate(flag string) (IRate, error)
+type RateProviderInterface interface {
+	CreateRateMethod(flag string) (RateInterface, error)
 }
 
 type RateProvider struct {
 }
 
-func (*RateProvider) GetSomeRate(flag string) (IRate, error) {
+func (*RateProvider) CreateRateMethod(flag string) (RateInterface, error) {
 	switch flag {
 	case "coinGeko":
 		return newCoinGekoRate(), nil
@@ -21,7 +21,6 @@ func (*RateProvider) GetSomeRate(flag string) (IRate, error) {
 		return newCoinbaseRate(), nil
 
 	default:
-		err := errors.New("Передано некоректний флаг")
-		return nil, err
+		return nil, errors.New("Передано некоректний флаг")
 	}
 }

@@ -3,7 +3,6 @@ package rateProviders
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/vsnnkv/btcApplicationGo/config"
 	"io/ioutil"
 	"net/http"
 )
@@ -12,25 +11,24 @@ type coinGekoRate struct {
 	Rate
 }
 
-func newCoinGekoRate() IRate {
+func newCoinGekoRate() RateInterface {
 	rate, err := getCoinGekoRateBtcToUah()
 	return &Rate{rateBtcToUah: rate,
 		err: err}
 }
 
 func getCoinGekoRateBtcToUah() (int64, error) {
-	cfg := config.Get()
+	var cfg rateConfig
+	cfg.getConf()
 
-	resp, err := http.Get(cfg.CoinGekoURL)
+	resp, err := http.Get(cfg.CoingekoUrl)
 
 	if err != nil {
 		return 0, err
 	}
 
-	var cryptoRate CoinGekoResponseDTO
-	//if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
-	//	return 0, err
-	//}
+	var cryptoRate coinGekoResponseDTO
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return 0, err
