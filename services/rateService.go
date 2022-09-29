@@ -35,8 +35,9 @@ func (rateService *RateService) GetRate() (int64, error) {
 	}
 
 	rate, err := method.GetRateFromProvider()
+
 	if err != nil {
-		rate, err = rateService.callBackup(backupFlag)
+		return createAndStartChain()
 	}
 
 	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
@@ -45,16 +46,14 @@ func (rateService *RateService) GetRate() (int64, error) {
 
 }
 
-func (rateService *RateService) callBackup(newFlag string) (int64, error) {
-	method, err := rateService.rateProviders.CreateRateMethod(newFlag)
-	if err != nil {
-		return 0, err
-	}
-	rate, err := method.GetRateFromProvider()
-	if err != nil {
-		return 0, err
-	}
+func createAndStartChain() (int64, error) {
+	coingeko := &rateProviders.CoinGekoRate{}
 
-	return rate, err
+	coinbase := &rateProviders.CoinbaseRate{}
+	coinbase.SetNext(coingeko)
 
+	binance := &rateProviders.BinanceRate{}
+	binance.SetNext(coinbase)
+
+	return binance.GetRateInChain()
 }

@@ -8,8 +8,24 @@ import (
 	"strconv"
 )
 
-type coinbaseRate struct {
+type CoinbaseRate struct {
 	Rate
+	next ChainInterface
+}
+
+func (r *CoinbaseRate) GetRateInChain() (int64, error) {
+
+	rate, err := getCoinbaseRateBtcToUah()
+
+	if err != nil {
+		return r.next.GetRateInChain()
+	} else {
+		return rate, err
+	}
+}
+
+func (r *CoinbaseRate) SetNext(next ChainInterface) {
+	r.next = next
 }
 
 func newCoinbaseRate() RateInterface {

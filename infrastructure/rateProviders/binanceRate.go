@@ -9,8 +9,24 @@ import (
 	"strings"
 )
 
-type binanceRate struct {
+type BinanceRate struct {
 	Rate
+	next ChainInterface
+}
+
+func (r *BinanceRate) GetRateInChain() (int64, error) {
+
+	rate, err := getBinanceRateBtcToUah()
+
+	if err != nil {
+		return r.next.GetRateInChain()
+	} else {
+		return rate, err
+	}
+}
+
+func (r *BinanceRate) SetNext(next ChainInterface) {
+	r.next = next
 }
 
 func newBinanceRate() RateInterface {

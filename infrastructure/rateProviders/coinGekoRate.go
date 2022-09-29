@@ -7,8 +7,24 @@ import (
 	"net/http"
 )
 
-type coinGekoRate struct {
+type CoinGekoRate struct {
 	Rate
+	next ChainInterface
+}
+
+func (r *CoinGekoRate) GetRateInChain() (int64, error) {
+
+	rate, err := getCoinGekoRateBtcToUah()
+
+	if err != nil {
+		return r.next.GetRateInChain()
+	} else {
+		return rate, err
+	}
+}
+
+func (r *CoinGekoRate) SetNext(next ChainInterface) {
+	r.next = next
 }
 
 func newCoinGekoRate() RateInterface {
