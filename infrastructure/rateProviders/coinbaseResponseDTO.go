@@ -1,6 +1,6 @@
-package models
+package rateProviders
 
-type CoinbaseResponseDTO struct {
+type coinbaseResponseDTO struct {
 	Data coinResponseDTO `json:"data"`
 }
 

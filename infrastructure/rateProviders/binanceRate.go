@@ -1,28 +1,43 @@
-package rateFactory
+package rateProviders
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/models"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-type binanceRate struct {
+type BinanceRate struct {
 	Rate
+	next ChainInterface
 }
 
-func newBinanceRate() IRate {
+func (r *BinanceRate) GetRateInChain() (int64, error) {
+
+	rate, err := getBinanceRateBtcToUah()
+
+	if err != nil {
+		return r.next.GetRateInChain()
+	} else {
+		return rate, err
+	}
+}
+
+func (r *BinanceRate) SetNext(next ChainInterface) {
+	r.next = next
+}
+
+func newBinanceRate() RateInterface {
 	rate, err := getBinanceRateBtcToUah()
 	return &Rate{rateBtcToUah: rate, err: err}
 
 }
 
 func getBinanceRateBtcToUah() (int64, error) {
-	cfg := config.Get()
+	var cfg rateConfig
+	cfg.getConf()
 
 	resp, err := http.Get(cfg.BinanceUrl)
 
@@ -30,10 +45,8 @@ func getBinanceRateBtcToUah() (int64, error) {
 		return 0, err
 	}
 
-	var cryptoRate models.BinanceResponse
-	//if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
-	//	return 0, err
-	//}
+	var cryptoRate binanceResponse
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return 0, err

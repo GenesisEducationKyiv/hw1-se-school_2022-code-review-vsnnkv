@@ -2,50 +2,50 @@ package services
 
 import (
 	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/services/rateFactory"
-	"github.com/vsnnkv/btcApplicationGo/tools"
-	"time"
+	"github.com/vsnnkv/btcApplicationGo/infrastructure/rateProviders"
 )
 
-type RateService struct {
+type RateServiceInterface interface {
+	GetRate() (int64, error)
 }
 
-const (
-	backupFlag = "coinbase"
-)
+type RateService struct {
+	rateProviders rateProviders.RateProviderInterface
+}
 
-func (*RateService) GetRate() (int64, error) {
+func NewRateService(r rateProviders.RateProviderInterface) *RateService {
+	return &RateService{rateProviders: r}
+}
+
+func (rateService *RateService) GetRate() (int64, error) {
 
 	cfg := config.Get()
 	flag := cfg.RateFlag
 
-	method, err := rateFactory.GetSomeRate(flag)
+	method, err := rateService.rateProviders.CreateRateMethod(flag)
 
 	if err != nil {
 		return 0, err
 	}
 
 	rate, err := method.GetRateFromProvider()
+
 	if err != nil {
-		rate, err = callBackup(backupFlag)
+		return createAndStartChain()
 	}
 
-	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
-	cache.Set("BtcToUAHrate", rate, 5*time.Minute)
 	return rate, err
 
 }
 
-func callBackup(newFlag string) (int64, error) {
-	method, err := rateFactory.GetSomeRate(newFlag)
-	if err != nil {
-		return 0, err
-	}
-	rate, err := method.GetRateFromProvider()
-	if err != nil {
-		return 0, err
-	}
+func createAndStartChain() (int64, error) {
+	coingeko := &rateProviders.CoinGekoRate{}
 
-	return rate, err
+	coinbase := &rateProviders.CoinbaseRate{}
+	coinbase.SetNext(coingeko)
 
+	binance := &rateProviders.BinanceRate{}
+	binance.SetNext(coinbase)
+
+	return binance.GetRateInChain()
 }

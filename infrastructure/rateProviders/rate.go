@@ -1,4 +1,4 @@
-package rateFactory
+package rateProviders
 
 type Rate struct {
 	rateBtcToUah int64

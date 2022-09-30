@@ -1,35 +1,50 @@
-package rateFactory
+package rateProviders
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/vsnnkv/btcApplicationGo/config"
-	"github.com/vsnnkv/btcApplicationGo/models"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
-type coinbaseRate struct {
+type CoinbaseRate struct {
 	Rate
+	next ChainInterface
 }
 
-func newCoinbaseRate() IRate {
-	rate, err := getCoinGekoRateBtcToUah()
+func (r *CoinbaseRate) GetRateInChain() (int64, error) {
+
+	rate, err := getCoinbaseRateBtcToUah()
+
+	if err != nil {
+		return r.next.GetRateInChain()
+	} else {
+		return rate, err
+	}
+}
+
+func (r *CoinbaseRate) SetNext(next ChainInterface) {
+	r.next = next
+}
+
+func newCoinbaseRate() RateInterface {
+	rate, err := getCoinbaseRateBtcToUah()
 	return &Rate{rateBtcToUah: rate,
 		err: err}
 }
 
 func getCoinbaseRateBtcToUah() (int64, error) {
-	cfg := config.Get()
+	var cfg rateConfig
+	cfg.getConf()
 
-	resp, err := http.Get(cfg.CoinGekoURL)
+	resp, err := http.Get(cfg.CoinbaseUrl)
 
 	if err != nil {
 		return 0, err
 	}
 
-	var cryptoRate models.CoinbaseResponseDTO
+	var cryptoRate coinbaseResponseDTO
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

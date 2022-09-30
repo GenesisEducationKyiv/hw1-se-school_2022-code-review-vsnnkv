@@ -1,0 +1,3 @@
+binanceUrl: http://api.binance.com/api/v3/ticker/price?symbol=BTCUAH
+coingekoUrl: https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=uah
+coinbaseUrl: https://api.coinbase.com/v2/prices/BTC-UAH/buy

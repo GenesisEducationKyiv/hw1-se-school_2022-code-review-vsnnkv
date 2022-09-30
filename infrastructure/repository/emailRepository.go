@@ -7,7 +7,13 @@ import (
 	"os"
 )
 
-type EmailFile struct {
+type EmailRepositoryInterface interface {
+	SaveEmailToFile(email string) error
+	IsExists(email string) (bool, error)
+	GetEmails() []string
+}
+
+type EmailRepository struct {
 }
 
 const (
@@ -15,7 +21,7 @@ const (
 	fileModePermutation = 0644
 )
 
-func (*EmailFile) SaveEmailToFile(email string) error {
+func (*EmailRepository) SaveEmailToFile(email string) error {
 
 	file, err := os.OpenFile("emails", fileModeFlags, fileModePermutation)
 
@@ -31,7 +37,7 @@ func (*EmailFile) SaveEmailToFile(email string) error {
 
 }
 
-func (*EmailFile) IsExists(email string) (bool, error) {
+func (*EmailRepository) IsExists(email string) (bool, error) {
 	file, err := os.OpenFile("emails", fileModeFlags, fileModePermutation)
 	if err != nil {
 		log.Fatal("Problems with opening a file.")
@@ -56,7 +62,7 @@ func (*EmailFile) IsExists(email string) (bool, error) {
 	return false, nil
 }
 
-func (*EmailFile) GetEmails() []string {
+func (*EmailRepository) GetEmails() []string {
 	file, err := os.Open("emails")
 	if err != nil {
 		return nil
