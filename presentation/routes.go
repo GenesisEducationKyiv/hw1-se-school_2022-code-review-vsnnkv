@@ -6,14 +6,14 @@ import (
 )
 
 type Handler struct {
-	rateController         *controllers.RateController
+	rateControllerProxy    *controllers.RateControllerProxy
 	subscriptionController *controllers.SubscriptionController
 	notificationController *controllers.NotificationController
 }
 
-func New(r *controllers.RateController, s *controllers.SubscriptionController, n *controllers.NotificationController) *Handler {
+func New(r *controllers.RateControllerProxy, s *controllers.SubscriptionController, n *controllers.NotificationController) *Handler {
 	return &Handler{
-		rateController:         r,
+		rateControllerProxy:    r,
 		subscriptionController: s,
 		notificationController: n,
 	}
@@ -22,7 +22,7 @@ func New(r *controllers.RateController, s *controllers.SubscriptionController, n
 func (h *Handler) CreateRoute() {
 	router := gin.Default()
 
-	router.GET("/api/rate", h.rateController.Get)
+	router.GET("/api/rate", h.rateControllerProxy.Get)
 	router.POST("/api/subscribe", h.subscriptionController.SaveEmail)
 	router.GET("/api/sendEmails", h.notificationController.SendEmails)
 

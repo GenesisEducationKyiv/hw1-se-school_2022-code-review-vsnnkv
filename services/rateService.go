@@ -3,8 +3,6 @@ package services
 import (
 	"github.com/vsnnkv/btcApplicationGo/config"
 	"github.com/vsnnkv/btcApplicationGo/infrastructure/rateProviders"
-	"github.com/vsnnkv/btcApplicationGo/tools"
-	"time"
 )
 
 type RateServiceInterface interface {
@@ -18,10 +16,6 @@ type RateService struct {
 func NewRateService(r rateProviders.RateProviderInterface) *RateService {
 	return &RateService{rateProviders: r}
 }
-
-const (
-	backupFlag = "coinbase"
-)
 
 func (rateService *RateService) GetRate() (int64, error) {
 
@@ -40,8 +34,6 @@ func (rateService *RateService) GetRate() (int64, error) {
 		return createAndStartChain()
 	}
 
-	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
-	cache.Set("BtcToUAHrate", rate, 5*time.Minute)
 	return rate, err
 
 }
