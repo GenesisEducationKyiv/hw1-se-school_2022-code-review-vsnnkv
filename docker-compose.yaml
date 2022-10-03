@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  rabbitmq: # login guest:guest
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  btc-app-image:
+    build: ./
+    restart: always
+    ports:
+      - 8080:8080
+#    volumes:
+#      - ./cmd/main.go
+#  btc-app:
+#    container_name: btc-app
+#    restart: on-failure
+#    build: btc-app
+#    ports:
+#      - 8080:8080
+
+  # Create service with RabbitMQ.
+#  message-broker:
+#    image: rabbitmq:3-management
+#    container_name: rabbitmq
+#    ports:
+#      - 5672:5672   # for sender and consumer connections
+#      - 15672:15672 # for serve RabbitMQ GUI
+#    volumes:
+#      - ${HOME}/dev-rabbitmq/data/:/var/lib/rabbitmq
+#      - ${HOME}/dev-rabbitmq/log/:/var/log/rabbitmq
+#    restart: always
+#    networks:
+#      - dev-network
+
+#networks:
+#  # Create a new Docker network.
+#  dev-network:
+#    driver: bridge
