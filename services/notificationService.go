@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"github.com/vsnnkv/btcApplicationGo/config"
+	"github.com/vsnnkv/btcApplicationGo/tools"
 	"gopkg.in/gomail.v2"
 	"strconv"
 )
@@ -14,22 +15,27 @@ type NotificationServiceInterface interface {
 type NotificationService struct {
 	rateService  RateService
 	emailService EmailService
+	logger       *tools.LoggerStruct
 }
 
-func NewNotificationService(r RateService, f EmailService) *NotificationService {
-	return &NotificationService{rateService: r, emailService: f}
+func NewNotificationService(r RateService, f EmailService, l *tools.LoggerStruct) *NotificationService {
+	return &NotificationService{rateService: r, emailService: f, logger: l}
 }
 
 func (n *NotificationService) SendEmails() error {
 	emails := n.emailService.repository.GetEmails()
 
 	if len(emails) == 0 {
-		return errors.New("Відсутні emailʼи")
+		err := errors.New("Відсутні emailʼи")
+		n.logger.LogError(err.Error())
+		return err
 	}
 
 	rate, err := n.rateService.GetRate()
 	if err != nil {
-		return errors.New("Помилка отримання курсу")
+		err := errors.New("Помилка отримання курсу")
+		n.logger.LogError(err.Error())
+		return err
 	}
 
 	var cfg = config.Get()
@@ -49,8 +55,10 @@ func (n *NotificationService) SendEmails() error {
 	d := gomail.NewDialer(host, port, address, password)
 
 	if err := d.DialAndSend(m); err != nil {
-		panic(err)
-		return errors.New("Помилка відправки emailʼів")
+		err := errors.New("Помилка відправки emailʼів")
+		n.logger.LogError(err.Error())
+		return err
 	}
+
 	return nil
 }
