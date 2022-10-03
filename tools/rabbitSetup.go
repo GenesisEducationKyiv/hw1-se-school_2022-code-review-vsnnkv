@@ -2,6 +2,7 @@ package tools
 
 import (
 	"context"
+	"github.com/vsnnkv/btcApplicationGo/config"
 	"github.com/vsnnkv/btcApplicationGo/tools/rabbitmq"
 	"log"
 )
@@ -23,8 +24,10 @@ func setupRabbit(ctx context.Context) {
 	var setup rabbitmq.Setup = func() {
 		createQueues(rabbit)
 	}
+	cfg := config.Get()
+
 	configConn := rabbitmq.ConfigConnection{
-		URI:           "amqp://guest:guest@localhost:5672",
+		URI:           cfg.RabbitUrl,
 		PrefetchCount: 1,
 	}
 	rabbitmq.KeepConnectionAndSetup(ctx, rabbit, configConn, setup)

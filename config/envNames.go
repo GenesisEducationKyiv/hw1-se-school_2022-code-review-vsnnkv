@@ -8,4 +8,5 @@ const (
 	SMTPPort      string = "SMTP_PORT"
 	EmailFile     string = "Email_File"
 	RateFlag      string = "RATE_FLAG"
+	RabbitUrl     string = "Rabbit_Url"
 )
