@@ -15,11 +15,6 @@ func Start(ctx context.Context) {
 	setupRabbit(ctx)
 }
 
-func Shutdown(ctx context.Context) (done chan struct{}) {
-	done = rabbit.Close(ctx)
-	return
-}
-
 func setupRabbit(ctx context.Context) {
 	var setup rabbitmq.Setup = func() {
 		createQueues(rabbit)

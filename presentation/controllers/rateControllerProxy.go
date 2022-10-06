@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/vsnnkv/btcApplicationGo/tools"
@@ -14,26 +13,22 @@ type RateControllerInterface interface {
 
 type RateControllerProxy struct {
 	rateController *RateController
-	logger         *tools.LoggerStruct
+	logger         *tools.Logger
 }
 
-func NewRateControllerProxy(r *RateController, l *tools.LoggerStruct) *RateControllerProxy {
+func NewRateControllerProxy(r *RateController, l *tools.Logger) *RateControllerProxy {
 	return &RateControllerProxy{rateController: r, logger: l}
 }
 
 func (r *RateControllerProxy) Get(c *gin.Context) {
 	rate, isExist := r.rateController.cache.Get("BtcToUAHrate")
-	tools.Log.Info("test info")
-	tools.Publish(context.Background(), "message")
-
+	r.logger.LogInfo("checking is rate in cache")
 	rateString := fmt.Sprint(rate)
 	if isExist {
-		msg := r.logger.LogInfo("find and return rate from cache")
-		tools.Publish(context.Background(), msg)
+		r.logger.LogInfo("find and return rate from cache")
 		c.String(http.StatusOK, rateString)
 	} else {
-		msg := r.logger.LogInfo("called rate Service")
-		tools.Publish(context.Background(), msg)
+		r.logger.LogInfo("called rate Service")
 		r.rateController.Get(c)
 	}
 }

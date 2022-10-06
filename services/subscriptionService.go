@@ -12,10 +12,10 @@ type SubscriptionServiceInterface interface {
 
 type SubscriptionService struct {
 	emailService EmailService
-	logger       *tools.LoggerStruct
+	logger       *tools.Logger
 }
 
-func NewSubscriptionService(f EmailService, l *tools.LoggerStruct) *SubscriptionService {
+func NewSubscriptionService(f EmailService, l *tools.Logger) *SubscriptionService {
 	return &SubscriptionService{emailService: f, logger: l}
 }
 

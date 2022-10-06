@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/vsnnkv/btcApplicationGo/services"
@@ -11,10 +10,10 @@ import (
 
 type SubscriptionController struct {
 	subscriptionService services.SubscriptionServiceInterface
-	logger              *tools.LoggerStruct
+	logger              *tools.Logger
 }
 
-func NewSubscriptionController(s services.SubscriptionServiceInterface, l *tools.LoggerStruct) *SubscriptionController {
+func NewSubscriptionController(s services.SubscriptionServiceInterface, l *tools.Logger) *SubscriptionController {
 	return &SubscriptionController{subscriptionService: s, logger: l}
 }
 
@@ -27,13 +26,10 @@ func (controller *SubscriptionController) SaveEmail(c *gin.Context) {
 
 	err := controller.subscriptionService.SaveEmail(passedParam.email)
 	if err != nil {
-		msg := controller.logger.LogError("failed to add email")
-		tools.Publish(context.Background(), msg)
-
+		controller.logger.LogError("failed to add email")
 		c.String(http.StatusInternalServerError, err.Error())
 	} else {
-		msg := controller.logger.LogInfo("successfully added email")
-		tools.Publish(context.Background(), msg)
+		controller.logger.LogInfo("successfully added email")
 		c.String(http.StatusOK, "Email додано")
 	}
 

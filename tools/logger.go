@@ -1,37 +1,44 @@
 package tools
 
 import (
+	"context"
 	"github.com/sirupsen/logrus"
 	time "time"
 )
 
 var Log = logrus.New()
 
-type LoggerStruct struct {
+type LoggerInterface interface {
+	LogInfo(msg string)
+	LogError(msg string)
+	LogDebug(msg string)
 }
 
-func NewLogger() *LoggerStruct {
-	return &LoggerStruct{}
+type Logger struct {
 }
 
-func (logger *LoggerStruct) LogInfo(msg string) string {
+func NewLogger() *Logger {
+	return &Logger{}
+}
+
+func (logger *Logger) LogInfo(msg string) {
 	Log.Info(msg)
 	t := time.Now()
-
-	return t.Format("2006-01-02 15:04:05") + " INFO: " + msg
+	msg = t.Format("2006-01-02 15:04:05") + " INFO: " + msg
+	Publish(context.Background(), msg)
 }
 
-func (logger *LoggerStruct) LogError(msg string) string {
+func (logger *Logger) LogError(msg string) {
 	Log.Error(msg)
 	t := time.Now()
-
-	return t.Format("2006-01-02 15:04:05") + " ERROR: " + msg
+	msg = t.Format("2006-01-02 15:04:05") + " ERROR: " + msg
+	Publish(context.Background(), msg)
 
 }
 
-func (logger *LoggerStruct) LogDebug(msg string) string {
+func (logger *Logger) LogDebug(msg string) {
 	Log.Debug(msg)
 	t := time.Now()
-
-	return t.Format("2006-01-02 15:04:05") + " DEBUG: " + msg
+	msg = t.Format("2006-01-02 15:04:05") + " DEBUG: " + msg
+	Publish(context.Background(), msg)
 }

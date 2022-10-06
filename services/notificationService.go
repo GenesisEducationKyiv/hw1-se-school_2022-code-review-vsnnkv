@@ -15,10 +15,10 @@ type NotificationServiceInterface interface {
 type NotificationService struct {
 	rateService  RateService
 	emailService EmailService
-	logger       *tools.LoggerStruct
+	logger       *tools.Logger
 }
 
-func NewNotificationService(r RateService, f EmailService, l *tools.LoggerStruct) *NotificationService {
+func NewNotificationService(r RateService, f EmailService, l *tools.Logger) *NotificationService {
 	return &NotificationService{rateService: r, emailService: f, logger: l}
 }
 

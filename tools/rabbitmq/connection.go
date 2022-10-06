@@ -12,9 +12,6 @@ import (
 var notifyOpenConn, notifySetupDone []chan struct{}
 var muxNotifyOpenConn, muxNotifySetup sync.Mutex = sync.Mutex{}, sync.Mutex{}
 
-// Connect connects to the rabbitMQ server and also creates the channels to produce and consume messages.
-// It can also notify the connection is open to other goroutines if the function NotifyOpenConnection
-// is called before connecting.
 func (r *rabbit) Connect(config ConfigConnection) (notify chan *amqp.Error, err error) {
 	r.conn, err = amqp.Dial(config.URI)
 	if err != nil {
@@ -40,7 +37,6 @@ func (r *rabbit) Connect(config ConfigConnection) (notify chan *amqp.Error, err 
 	return
 }
 
-// Close closes the rabbitMQ connection
 func (r *rabbit) Close(ctx context.Context) (done chan struct{}) {
 	done = make(chan struct{})
 
@@ -52,7 +48,7 @@ func (r *rabbit) Close(ctx context.Context) (done chan struct{}) {
 
 	go func() {
 		defer close(done)
-		select { // either waits for the messages to process or timeout from context
+		select {
 		case <-doneWaiting:
 		case <-ctx.Done():
 		}
@@ -61,7 +57,6 @@ func (r *rabbit) Close(ctx context.Context) (done chan struct{}) {
 	return
 }
 
-// KeepConnectionAndSetup starts a goroutine to keep the connection open and everytime the connection is open, it will call the setupRabbit function. It is important to pass a context with cancel so the goroutine can be closed when the context is done. Otherwise it will run until the program ends.
 func KeepConnectionAndSetup(ctx context.Context, conn Connector, config ConfigConnection, setupRabbit RabbitSetup) {
 	go func() {
 		for {
@@ -81,20 +76,6 @@ func KeepConnectionAndSetup(ctx context.Context, conn Connector, config ConfigCo
 			}
 		}
 	}()
-}
-
-// NotifyOpenConnection registers a channel to be notified when the connection is open
-func NotifyOpenConnection(notify chan struct{}) {
-	muxNotifyOpenConn.Lock()
-	defer muxNotifyOpenConn.Unlock()
-	notifyOpenConn = append(notifyOpenConn, notify)
-}
-
-// NotifySetupDone registers a channel to be notified when the setup is done by the KeepConnectionAndSetup function
-func NotifySetupDone(notify chan struct{}) {
-	muxNotifySetup.Lock()
-	defer muxNotifySetup.Unlock()
-	notifySetupDone = append(notifySetupDone, notify)
 }
 
 func notifyOpenConnections() {

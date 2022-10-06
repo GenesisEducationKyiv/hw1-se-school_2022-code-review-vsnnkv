@@ -13,7 +13,6 @@ type rabbit struct {
 	wg         *sync.WaitGroup
 }
 
-// NewRabbitMQ creates the object to manage the operations to rabbitMQ
 func NewRabbitMQ() RabbitMQ {
 	return &rabbit{
 		wg: &sync.WaitGroup{},
