@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/vsnnkv/btcApplicationGo/tools"
 	"net/mail"
 )
 
@@ -11,29 +12,38 @@ type SubscriptionServiceInterface interface {
 
 type SubscriptionService struct {
 	emailService EmailService
+	logger       *tools.Logger
 }
 
-func NewSubscriptionService(f EmailService) *SubscriptionService {
-	return &SubscriptionService{emailService: f}
+func NewSubscriptionService(f EmailService, l *tools.Logger) *SubscriptionService {
+	return &SubscriptionService{emailService: f, logger: l}
 }
 
 func (s *SubscriptionService) SaveEmail(email string) error {
 	if !isEmailValid(email) {
-		return errors.New("email not valid")
+		err := errors.New("email not valid")
+		s.logger.LogError(err.Error())
+		return err
 	}
 	exist, err := s.emailService.repository.IsExists(email)
 
 	if err != nil {
-		return errors.New("Помилка сервера")
+		err := errors.New("Помилка сервера")
+		s.logger.LogError(err.Error())
+		return err
 	}
 
 	if exist {
-		return errors.New("Email вже було додано")
+		err := errors.New("Email вже було додано")
+		s.logger.LogError(err.Error())
+		return err
 	}
 
 	err = s.emailService.repository.SaveEmailToFile(email)
 	if err != nil {
-		return errors.New("Помилка збереження файла")
+		err := errors.New("Помилка збереження файла")
+		s.logger.LogError(err.Error())
+		return err
 	}
 	return nil
 }
