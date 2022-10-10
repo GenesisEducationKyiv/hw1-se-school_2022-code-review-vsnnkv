@@ -7,7 +7,7 @@ ENV GOPATH=/
 
 RUN go mod download
 
-COPY ./ ./
+COPY .. ./
 
 RUN go build -o btc-app ./cmd/main.go
 

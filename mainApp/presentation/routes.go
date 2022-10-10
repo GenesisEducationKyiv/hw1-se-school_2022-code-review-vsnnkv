@@ -9,13 +9,16 @@ type Handler struct {
 	rateControllerProxy    *controllers.RateControllerProxy
 	subscriptionController *controllers.SubscriptionController
 	notificationController *controllers.NotificationController
+	dtmController          *controllers.DTMController
 }
 
-func New(r *controllers.RateControllerProxy, s *controllers.SubscriptionController, n *controllers.NotificationController) *Handler {
+func New(r *controllers.RateControllerProxy, s *controllers.SubscriptionController, n *controllers.NotificationController,
+	d *controllers.DTMController) *Handler {
 	return &Handler{
 		rateControllerProxy:    r,
 		subscriptionController: s,
 		notificationController: n,
+		dtmController:          d,
 	}
 }
 

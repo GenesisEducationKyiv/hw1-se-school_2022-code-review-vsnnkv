@@ -10,6 +10,9 @@ import (
 )
 
 func InitHandler() {
+
+	dtmController := controllers.DTMController{}
+
 	cache := tools.NewCache(5*time.Minute, 6*time.Minute)
 
 	emailsFile := repository.EmailRepository{}
@@ -22,9 +25,9 @@ func InitHandler() {
 
 	rateController := controllers.NewRateController(rateService, cache)
 	rateControllerProxy := controllers.NewRateControllerProxy(rateController)
-	subscriptionController := controllers.NewSubscriptionController(subscriptionService)
+	subscriptionController := controllers.NewSubscriptionController(subscriptionService, &dtmController)
 	notificationController := controllers.NewNotificationController(notificationService)
 
-	handler := New(rateControllerProxy, subscriptionController, notificationController)
+	handler := New(rateControllerProxy, subscriptionController, notificationController, &dtmController)
 	handler.CreateRoute()
 }
