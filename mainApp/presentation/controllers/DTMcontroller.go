@@ -10,8 +10,8 @@ import (
 )
 
 var dtmCoordinatorAddress = "http://localhost:36789/api/dtmsvr"
-var ordersServerURL = "http://orders:8080"
-var customersServerURL = "http://customers:8080"
+var ordersServerURL = " http://localhost:8080"
+var customersServerURL = "http://localhost:8081"
 var mysqlURL = "saga:saga@tcp(mysql:3306)/saga?charset=utf8mb4&parseTime=True&loc=Local"
 
 type DTMController struct {
@@ -26,13 +26,6 @@ type order struct {
 }
 
 func (dtm *DTMController) createOrder(createOrderRequest *orderRequest) error {
-	//createOrderRequest := orderRequest{}
-	//c := gin.Context{}
-	//err := c.BindJSON(&createOrderRequest)
-	//if err != nil {
-	//	//c.String(http.StatusInternalServerError, "Помилка сервера")
-	//	return err
-	//}
 
 	globalTransactionId := dtmcli.MustGenGid(dtmCoordinatorAddress)
 	req, _ := StructToMap(createOrderRequest)
@@ -49,15 +42,9 @@ func (dtm *DTMController) createOrder(createOrderRequest *orderRequest) error {
 
 	return nil
 
-	//if err != nil {
-	//	c.JSON(http.StatusInternalServerError, createOrderResponse)
-	//} else {
-	//	c.JSON(http.StatusOK, createOrderResponse)
-	//}
-
 }
 
-func (dtm *DTMController) registerOrder(c *gin.Context) {
+func (dtm *DTMController) RegisterOrder(c *gin.Context) {
 	registerOrderRequest := struct {
 		IdCustomer uint   `json:"idCustomer"`
 		Email      string `json:"email"`
@@ -85,7 +72,7 @@ func (dtm *DTMController) registerOrder(c *gin.Context) {
 
 }
 
-func (dtm *DTMController) registerOrderCompensate(c *gin.Context) {
+func (dtm *DTMController) RegisterOrderCompensate(c *gin.Context) {
 	transactionId := c.Query("gid")
 
 	err := getDb().Model(&order{}).

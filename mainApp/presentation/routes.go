@@ -29,5 +29,8 @@ func (h *Handler) CreateRoute() {
 	router.POST("/api/subscribe", h.subscriptionController.SaveEmail)
 	router.GET("/api/sendEmails", h.notificationController.SendEmails)
 
+	router.POST("/register-order", h.dtmController.RegisterOrder)
+	router.POST("/register-order-compensate", h.dtmController.RegisterOrderCompensate)
+
 	router.Run()
 }

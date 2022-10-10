@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"github.com/dtm-labs/client/dtmcli"
 	"github.com/dtm-labs/dtm/dtmutil"
 	"github.com/gin-gonic/gin"
@@ -8,17 +10,24 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"log"
-	"net/http"
-	"os"
 )
+
+var mysqlURL = "saga:saga@tcp(mysql:3306)/saga?charset=utf8mb4&parseTime=True&loc=Local"
 
 // model
 type (
-	Customer struct {
+	CustomerR struct {
 		gorm.Model
 		Balance uint
 		Version uint
 	}
+
+	Customer struct {
+		gorm.Model
+		Email   string
+		Version uint
+	}
+
 	ProcessedTransaction struct {
 		gorm.Model
 		IDTransaction string
@@ -29,20 +38,8 @@ type (
 func main() {
 	app := gin.New()
 
-	//DID I NEED THAT?????
-	//I THINK NO
-
-	// public customers api
-	app.POST("/create", func(c *gin.Context) {
-		customer := Customer{Balance: 100}
-
-		err := getDb().Save(&customer).Error
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, err)
-			return
-		}
-
-		c.JSON(http.StatusOK, customer)
+	app.GET("/test", func(c *gin.Context) {
+		c.String(200, "ok")
 	})
 
 	// internal customers api
@@ -67,32 +64,25 @@ func main() {
 				First(&customer, withdrawRequest.IdCustomer).
 				Error
 			if err != nil {
-				return dtmcli.ErrFailure
+				_ = getDb().Save(customer).Error
+				res := tx.Model(&Customer{}).
+					Where("id = ? AND version = ?", customer.ID, customer.Version-1).
+					Save(customer)
+				if res.RowsAffected != 1 {
+					return dtmcli.ErrOngoing
+				}
+				tx.Save(&ProcessedTransaction{IDTransaction: transactionId})
+				fmt.Println("transaction?")
+				return nil
+
+			} else {
+				return errors.New("customer already saved")
 			}
-
-			// check balance
-			if customer.Balance < withdrawRequest.Amount {
-				return dtmcli.ErrFailure
-			}
-
-			// change
-			customer.Version = customer.Version + 1
-			customer.Balance -= withdrawRequest.Amount
-
-			// save
-			res := tx.Model(&Customer{}).
-				Where("id = ? AND version = ?", customer.ID, customer.Version-1).
-				Save(customer)
-			if res.RowsAffected != 1 {
-				return dtmcli.ErrOngoing
-			}
-			tx.Save(&ProcessedTransaction{IDTransaction: transactionId})
-
-			return nil
 		})
 
 		return err
 	}))
+
 	app.POST("/withdraw-money-compensate", dtmutil.WrapHandler2(func(c *gin.Context) interface{} {
 		compensateRequest := struct {
 			IdCustomer uint `json:"idCustomer"`
@@ -125,7 +115,7 @@ func main() {
 			}
 
 			customer.Version = customer.Version + 1
-			customer.Balance = customer.Balance + compensateRequest.Amount
+			//customer.Balance = customer.Balance + compensateRequest.Amount
 
 			// save
 			result := tx.
@@ -143,11 +133,11 @@ func main() {
 	}))
 
 	log.Println("started")
-	_ = app.Run(":8080")
+	_ = app.Run(":8081")
 }
 
 func getDb() *gorm.DB {
-	db, err := gorm.Open(mysql.Open(os.Getenv("MYSQL_DSN")), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(mysqlURL), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
