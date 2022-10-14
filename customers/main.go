@@ -16,15 +16,10 @@ var mysqlURL = "saga:saga@tcp(mysql:3306)/saga?charset=utf8mb4&parseTime=True&lo
 
 // model
 type (
-	CustomerR struct {
-		gorm.Model
-		Balance uint
-		Version uint
-	}
-
 	Customer struct {
 		gorm.Model
 		Email   string
+		Balance uint
 		Version uint
 	}
 
@@ -37,10 +32,6 @@ type (
 // system
 func main() {
 	app := gin.New()
-
-	app.GET("/test", func(c *gin.Context) {
-		c.String(200, "ok")
-	})
 
 	// internal customers api
 	app.POST("/withdraw-money", dtmutil.WrapHandler2(func(c *gin.Context) interface{} {

@@ -9,12 +9,10 @@ import (
 
 type SubscriptionController struct {
 	subscriptionService services.SubscriptionServiceInterface
-	dtm                 DTMController
 }
 
-func NewSubscriptionController(s services.SubscriptionServiceInterface, d *DTMController) *SubscriptionController {
-	return &SubscriptionController{subscriptionService: s,
-		dtm: *d}
+func NewSubscriptionController(s services.SubscriptionServiceInterface) *SubscriptionController {
+	return &SubscriptionController{subscriptionService: s}
 }
 
 type Email struct {
@@ -33,21 +31,8 @@ func (controller *SubscriptionController) SaveEmail(c *gin.Context) {
 		c.String(http.StatusInternalServerError, err.Error())
 	} else {
 
-		createdOrderRequest := orderRequest{}
-		c.BindJSON(&createdOrderRequest)
-		if err != nil {
-			c.String(http.StatusInternalServerError, err.Error())
-		}
+		err = controller.subscriptionService.CreateCustomer(passedParam.Email)
 
-		err := controller.dtm.createOrder(&createdOrderRequest)
-		fmt.Println(err)
-		//here should pass to DTS
 		c.String(http.StatusOK, "Email додано")
 	}
-
-}
-
-type orderRequest struct {
-	IdCustomer uint   `json:"idCustomer"`
-	Email      string `json:"email"`
 }
