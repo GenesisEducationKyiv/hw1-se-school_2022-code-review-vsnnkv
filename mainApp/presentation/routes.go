@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/vsnnkv/btcApplicationGo/presentation/controllers"
+	"github.com/vsnnkv/btcApplicationGo/tools"
 )
 
 type Handler struct {
@@ -31,6 +33,9 @@ func (h *Handler) CreateRoute() {
 
 	router.POST("/register-order", h.dtmController.RegisterCustomerStatus)
 	router.POST("/register-order-compensate", h.dtmController.RegisterCustomerStatusCompensate)
+
+	ctx, _ := context.WithCancel(context.Background())
+	tools.Start(ctx)
 
 	router.Run()
 }

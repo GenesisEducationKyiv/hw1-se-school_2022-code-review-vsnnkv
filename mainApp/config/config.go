@@ -19,6 +19,7 @@ type Config struct {
 	SMTPPort      string
 	EmailFile     string
 	RateFlag      string
+	RabbitUrl     string
 }
 
 var (
@@ -37,6 +38,7 @@ func Get() *Config {
 			SMTPPort:      os.Getenv(SMTPPort),
 			EmailFile:     os.Getenv(EmailFile),
 			RateFlag:      os.Getenv(RateFlag),
+			RabbitUrl:     os.Getenv(RabbitUrl),
 		}
 	})
 	return &cfg

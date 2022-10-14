@@ -1,12 +1,15 @@
-FROM golang:1.18-alpine AS build
-RUN apk add build-base
+FROM golang:1.18-alpine
+EXPOSE 8181
 
-WORKDIR /app
-COPY . /app
-RUN go build -o server main.go
+COPY go.mod ./
+COPY go.sum ./
+ENV GOPATH=/
 
-FROM golang:1.18-alpine as run
-COPY --from=build /app/server /app/server
+RUN go mod download
 
-EXPOSE 8080
-CMD /app/server
+COPY .. ./
+
+RUN go build -o customers ./main.go
+
+
+CMD [ "./customers"]

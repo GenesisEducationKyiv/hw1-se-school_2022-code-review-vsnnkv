@@ -6,6 +6,7 @@ const (
 	EmailPassword string = "EMAIL_PASSWORD"
 	SMTPHost      string = "SMTP_HOST"
 	SMTPPort      string = "SMTP_PORT"
-	EmailFile     string = "Email_File"
+	EmailFile     string = "EMAIL_FILE"
 	RateFlag      string = "RATE_FLAG"
+	RabbitUrl     string = "RABBIT_URL"
 )
